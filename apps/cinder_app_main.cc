@@ -1,0 +1,1 @@
+CINDER_APP(IdealGasApp, ci::app::RendererGl, prepareSettings);
