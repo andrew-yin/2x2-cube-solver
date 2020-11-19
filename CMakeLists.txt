@@ -55,6 +55,9 @@ list(APPEND SOURCE_FILES ${CORE_SOURCE_FILES})
 
 list(APPEND TEST_FILES)
 
+add_executable(solver-main apps/solver_main.cc ${CORE_SOURCE_FILES})
+target_include_directories(solver-main PRIVATE include)
+
 ci_make_app(
         APP_NAME solver-app
         CINDER_PATH ${CINDER_PATH}
@@ -71,5 +74,5 @@ ci_make_app(
 )
 
 if (MSVC)
-    set_property(TARGET rubiks-solver-test APPEND_STRING PROPERTY LINK_FLAGS " /SUBSYSTEM:CONSOLE")
+    set_property(TARGET solver-test APPEND_STRING PROPERTY LINK_FLAGS " /SUBSYSTEM:CONSOLE")
 endif ()

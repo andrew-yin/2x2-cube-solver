@@ -1,12 +1,15 @@
 #pragma once
 
+#include <vector>
 #include <string>
+
 #include "cube.h"
+
 namespace cubesolver {
 
 class Solver {
  public:
-  static std::string SolveCube(Cube cube);
+  std::vector<std::string> SolveCube(const Cube& scrambled_cube);
 };
 
 }
