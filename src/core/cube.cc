@@ -322,4 +322,12 @@ void Cube::MoveF2() {
   MoveF();
 }
 
+bool Cube::operator==(const Cube &b) const {
+  return (ful_ == b.ful_) && (fur_ == b.fur_) && (fdl_ == b.fdl_) && (fdr_ == b.fdr_) && (lul_ == b.lul_)
+      && (lur_ == b.lur_) && (ldl_ == b.ldl_) && (ldr_ == b.ldr_) && (uul_ == b.uul_) && (uur_ == b.uur_)
+      && (udl_ == b.udl_) && (udr_ == b.udr_) && (rul_ == b.rul_) && (rur_ == b.rur_) && (rdl_ == b.rdl_)
+      && (rdr_ == b.rdr_) && (dul_ == b.dul_) && (dur_ == b.dur_) && (ddl_ == b.ddl_) && (ddr_ == b.ddr_)
+      && (bul_ == b.bul_) && (bur_ == b.bur_) && (bdl_ == b.bdl_) && (bdr_ == b.bdr_);
+}
+
 }

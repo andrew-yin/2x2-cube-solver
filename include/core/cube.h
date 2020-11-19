@@ -4,8 +4,7 @@
 
 namespace cubesolver {
 
-class Cube {
- public:
+struct Cube {
   Cube();
   Cube(Color ful,
        Color fur,
@@ -51,7 +50,8 @@ class Cube {
   void MoveFP();
   void MoveF2();
 
- private:
+  bool operator==(const Cube& b) const;
+
   Color ful_;
   Color fur_;
   Color fdl_;
