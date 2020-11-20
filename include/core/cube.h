@@ -32,23 +32,11 @@ struct Cube {
        Color ddr);
 
   void MoveU();
-  void MoveUP();
-  void MoveU2();
   void MoveD();
-  void MoveDP();
-  void MoveD2();
   void MoveL();
-  void MoveLP();
-  void MoveL2();
   void MoveR();
-  void MoveRP();
-  void MoveR2();
   void MoveB();
-  void MoveBP();
-  void MoveB2();
   void MoveF();
-  void MoveFP();
-  void MoveF2();
 
   bool operator==(const Cube& b) const;
 

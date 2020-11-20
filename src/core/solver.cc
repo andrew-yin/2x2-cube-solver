@@ -42,120 +42,114 @@ std::vector<std::string> Solver::SolveCube(const Cube& scrambled_cube) const {
       cube.MoveF();
       scramble.push_back("F");
       queue.push(std::pair<Cube, std::vector<std::string>>(cube, scramble));
-      cube.MoveFP();
       scramble.pop_back();
 
-      cube.MoveFP();
-      scramble.push_back("F'");
-      queue.push(std::pair<Cube, std::vector<std::string>>(cube, scramble));
       cube.MoveF();
-      scramble.pop_back();
-
-      cube.MoveF2();
       scramble.push_back("F2");
       queue.push(std::pair<Cube, std::vector<std::string>>(cube, scramble));
-      cube.MoveF2();
       scramble.pop_back();
+
+      cube.MoveF();
+      scramble.push_back("F'");
+      queue.push(std::pair<Cube, std::vector<std::string>>(cube, scramble));
+      scramble.pop_back();
+
+      cube.MoveF();
     }
 
     if (!IsBackMove(last_move) || last_move == " ") {
       cube.MoveB();
       scramble.push_back("B");
       queue.push(std::pair<Cube, std::vector<std::string>>(cube, scramble));
-      cube.MoveBP();
       scramble.pop_back();
 
-      cube.MoveBP();
-      scramble.push_back("B'");
-      queue.push(std::pair<Cube, std::vector<std::string>>(cube, scramble));
       cube.MoveB();
-      scramble.pop_back();
-
-      cube.MoveB2();
       scramble.push_back("B2");
       queue.push(std::pair<Cube, std::vector<std::string>>(cube, scramble));
-      cube.MoveB2();
       scramble.pop_back();
+
+      cube.MoveB();
+      scramble.push_back("B'");
+      queue.push(std::pair<Cube, std::vector<std::string>>(cube, scramble));
+      scramble.pop_back();
+
+      cube.MoveB();
     }
 
     if (!IsRightMove(last_move) || last_move == " ") {
       cube.MoveR();
       scramble.push_back("R");
       queue.push(std::pair<Cube, std::vector<std::string>>(cube, scramble));
-      cube.MoveRP();
       scramble.pop_back();
 
-      cube.MoveRP();
-      scramble.push_back("R'");
-      queue.push(std::pair<Cube, std::vector<std::string>>(cube, scramble));
       cube.MoveR();
-      scramble.pop_back();
-
-      cube.MoveR2();
       scramble.push_back("R2");
       queue.push(std::pair<Cube, std::vector<std::string>>(cube, scramble));
-      cube.MoveR2();
       scramble.pop_back();
+
+      cube.MoveR();
+      scramble.push_back("R'");
+      queue.push(std::pair<Cube, std::vector<std::string>>(cube, scramble));
+      scramble.pop_back();
+
+      cube.MoveR();
     }
 
     if (!IsLeftMove(last_move) || last_move == " ") {
       cube.MoveL();
       scramble.push_back("L");
       queue.push(std::pair<Cube, std::vector<std::string>>(cube, scramble));
-      cube.MoveLP();
       scramble.pop_back();
 
-      cube.MoveLP();
-      scramble.push_back("L'");
-      queue.push(std::pair<Cube, std::vector<std::string>>(cube, scramble));
       cube.MoveL();
-      scramble.pop_back();
-
-      cube.MoveL2();
       scramble.push_back("L2");
       queue.push(std::pair<Cube, std::vector<std::string>>(cube, scramble));
-      cube.MoveL2();
       scramble.pop_back();
+
+      cube.MoveL();
+      scramble.push_back("L'");
+      queue.push(std::pair<Cube, std::vector<std::string>>(cube, scramble));
+      scramble.pop_back();
+
+      cube.MoveL();
     }
 
     if (!IsUpMove(last_move) || last_move == " ") {
       cube.MoveU();
       scramble.push_back("U");
       queue.push(std::pair<Cube, std::vector<std::string>>(cube, scramble));
-      cube.MoveUP();
       scramble.pop_back();
 
-      cube.MoveUP();
-      scramble.push_back("U'");
-      queue.push(std::pair<Cube, std::vector<std::string>>(cube, scramble));
       cube.MoveU();
-      scramble.pop_back();
-
-      cube.MoveU2();
       scramble.push_back("U2");
       queue.push(std::pair<Cube, std::vector<std::string>>(cube, scramble));
-      cube.MoveU2();
       scramble.pop_back();
+
+      cube.MoveU();
+      scramble.push_back("U'");
+      queue.push(std::pair<Cube, std::vector<std::string>>(cube, scramble));
+      scramble.pop_back();
+
+      cube.MoveU();
     }
 
     if (!IsDownMove(last_move) || last_move == " ") {
       cube.MoveD();
       scramble.push_back("D");
       queue.push(std::pair<Cube, std::vector<std::string>>(cube, scramble));
-      cube.MoveDP();
       scramble.pop_back();
 
-      cube.MoveDP();
-      scramble.push_back("D'");
-      queue.push(std::pair<Cube, std::vector<std::string>>(cube, scramble));
       cube.MoveD();
-      scramble.pop_back();
-
-      cube.MoveD2();
       scramble.push_back("D2");
       queue.push(std::pair<Cube, std::vector<std::string>>(cube, scramble));
-      cube.MoveD2();
       scramble.pop_back();
+
+      cube.MoveD();
+      scramble.push_back("D'");
+      queue.push(std::pair<Cube, std::vector<std::string>>(cube, scramble));
+      scramble.pop_back();
+
+      cube.MoveD();
     }
   }
 

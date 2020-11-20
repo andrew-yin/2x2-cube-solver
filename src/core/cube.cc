@@ -107,16 +107,6 @@ void Cube::MoveU() {
   bur_ = lur_org;
 }
 
-void Cube::MoveUP() {
-  MoveU();
-  MoveU();
-  MoveU();
-}
-void Cube::MoveU2() {
-  MoveU();
-  MoveU();
-}
-
 void Cube::MoveD() {
   Color dur_org = dur_;
   Color dul_org = dul_;
@@ -145,17 +135,6 @@ void Cube::MoveD() {
   rdr_ = fdr_org;
   bdl_ = rdl_org;
   bdr_ = rdr_org;
-}
-
-void Cube::MoveDP() {
-  MoveD();
-  MoveD();
-  MoveD();
-}
-
-void Cube::MoveD2() {
-  MoveD();
-  MoveD();
 }
 
 void Cube::MoveL() {
@@ -188,17 +167,6 @@ void Cube::MoveL() {
   bdr_ = dul_org;
 }
 
-void Cube::MoveLP() {
-  MoveL();
-  MoveL();
-  MoveL();
-}
-
-void Cube::MoveL2() {
-  MoveL();
-  MoveL();
-}
-
 void Cube::MoveR() {
   Color rur_org = rur_;
   Color rul_org = rul_;
@@ -227,17 +195,6 @@ void Cube::MoveR() {
   ddr_ = bul_org;
   bul_ = udr_org;
   bdl_ = uur_org;
-}
-
-void Cube::MoveRP() {
-  MoveR();
-  MoveR();
-  MoveR();
-}
-
-void Cube::MoveR2() {
-  MoveR();
-  MoveR();
 }
 
 void Cube::MoveB() {
@@ -270,17 +227,6 @@ void Cube::MoveB() {
   ddr_ = ldl_org;
 }
 
-void Cube::MoveBP() {
-  MoveB();
-  MoveB();
-  MoveB();
-}
-
-void Cube::MoveB2() {
-  MoveB();
-  MoveB();
-}
-
 void Cube::MoveF() {
   Color ful_org = ful_;
   Color fur_org = fur_;
@@ -309,17 +255,6 @@ void Cube::MoveF() {
   ldr_ = dur_org;
   dul_ = rdl_org;
   dur_ = rul_org;
-}
-
-void Cube::MoveFP() {
-  MoveF();
-  MoveF();
-  MoveF();
-}
-
-void Cube::MoveF2() {
-  MoveF();
-  MoveF();
 }
 
 bool Cube::operator==(const Cube &b) const {
