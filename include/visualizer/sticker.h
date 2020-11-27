@@ -20,14 +20,13 @@ class Sticker {
   void SetColor(const Color& color);
   const Color& GetColor() const;
 
- private:
-  glm::vec2 top_left_corner_;
-  glm::vec2 bottom_right_corner_;
-  ci::Rectf box_;
+  bool IsWithinSticker(const glm::vec2& pos) const;
 
+ private:
+  ci::Rectf box_;
   Color color_;
 };
 
-}
+}  // namespace visualizer
 
-}
+}  // namespace cubesolver

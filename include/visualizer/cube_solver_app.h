@@ -1,7 +1,9 @@
 #pragma once
 
+#include <core/cube.h>
+#include <core/face.h>
 
-#include <vector>
+#include <array>
 
 #include "cinder/app/App.h"
 #include "cinder/app/RendererGl.h"
@@ -18,11 +20,7 @@ class CubeSolverApp : public ci::app::App {
 
   void setup() override;
   void draw() override;
-  /*
   void mouseDown(ci::app::MouseEvent event) override;
-  void mouseDrag(ci::app::MouseEvent event) override;
-  void keyDown(ci::app::KeyEvent event) override;
-   */
 
   const double kWindowWidth = 1600;
   const double kWindowHeight = 900;
@@ -30,9 +28,11 @@ class CubeSolverApp : public ci::app::App {
   const double kStickerWidth = 100;
 
  private:
-  std::vector<std::vector<Sticker>> stickers_;
+  std::array<std::array<Sticker, kNumCornersPerFace>, kNumFaces> stickers_;
+
+  void CreateFace(const Face& face, const glm::vec2& top_left_corner);
 };
 
-}
+}  // namespace visualizer
 
-}
+}  // namespace cubesolver
