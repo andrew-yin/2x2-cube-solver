@@ -1,6 +1,6 @@
 #pragma once
 
-#include <vector>
+#include <array>
 
 #include "color.h"
 
@@ -11,7 +11,8 @@ const size_t kNumCornersPerFace = 4;
 
 struct Cube {
   Cube();
-  Cube(const std::vector<std::vector<Color>>& stickers);
+  Cube(const std::array<std::array<Color, kNumCornersPerFace>, kNumFaces>&
+           stickers);
 
   void MoveU();
   void MoveD();
@@ -22,8 +23,7 @@ struct Cube {
 
   bool operator==(const Cube& b) const;
 
-  std::vector<std::vector<Color>> stickers_;
-
+  std::array<std::array<Color, kNumCornersPerFace>, kNumFaces> stickers_;
 };
 
-}
+}  // namespace cubesolver

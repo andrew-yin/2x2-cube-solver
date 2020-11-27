@@ -10,7 +10,7 @@ int main() {
   Solver solver;
 
   /* Scramble: R U2 L' B D */
-  std::vector<std::vector<Color>> stickers(6, std::vector<Color>(4));
+  std::array<std::array<Color, kNumCornersPerFace>, kNumFaces> stickers;
 
   stickers[front][up_left] = yellow;
   stickers[front][up_right] = blue;

@@ -5,7 +5,7 @@
 
 namespace cubesolver {
 
-Cube::Cube() : stickers_(kNumFaces, std::vector<Color>(kNumCornersPerFace)) {
+Cube::Cube() {
   for (size_t i = 0; i < kNumCornersPerFace; i++) {
     stickers_[front][i] = green;
     stickers_[back][i] = blue;
@@ -16,7 +16,8 @@ Cube::Cube() : stickers_(kNumFaces, std::vector<Color>(kNumCornersPerFace)) {
   }
 }
 
-Cube::Cube(const std::vector<std::vector<Color>>& stickers)
+Cube::Cube(const std::array<std::array<Color, kNumCornersPerFace>, kNumFaces>&
+               stickers)
     : stickers_(stickers) {
 }
 
