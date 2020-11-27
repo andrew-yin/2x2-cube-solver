@@ -1,4 +1,7 @@
+#include <core/corner.h>
+#include <core/face.h>
 #include <core/solver.h>
+
 #include <iostream>
 
 using namespace cubesolver;
@@ -7,61 +10,40 @@ int main() {
   Solver solver;
 
   /* Scramble: R U2 L' B D */
-  Color ful = yellow;
-  Color fur = blue;
-  Color fdl = white;
-  Color fdr = orange;
+  std::vector<std::vector<Color>> stickers(6, std::vector<Color>(4));
 
-  Color rul = orange;
-  Color rur = blue;
-  Color rdl = yellow;
-  Color rdr = yellow;
+  stickers[front][up_left] = yellow;
+  stickers[front][up_right] = blue;
+  stickers[front][low_left] = white;
+  stickers[front][low_right] = orange;
 
-  Color uul = orange;
-  Color uur = red;
-  Color udl = green;
-  Color udr = white;
+  stickers[right][up_left] = orange;
+  stickers[right][up_right] = blue;
+  stickers[right][low_left] = yellow;
+  stickers[right][low_right] = yellow;
 
-  Color lul = white;
-  Color lur = orange;
-  Color ldl = green;
-  Color ldr = green;
+  stickers[up][up_left] = orange;
+  stickers[up][up_right] = red;
+  stickers[up][low_left] = green;
+  stickers[up][low_right] = white;
 
-  Color bul = white;
-  Color bur = green;
-  Color bdl = red;
-  Color bdr = yellow;
+  stickers[left][up_left] = white;
+  stickers[left][up_right] = orange;
+  stickers[left][low_left] = green;
+  stickers[left][low_right] = green;
 
-  Color dul = red;
-  Color dur = blue;
-  Color ddl = red;
-  Color ddr = blue;
+  stickers[back][up_left] = white;
+  stickers[back][up_right] = green;
+  stickers[back][low_left] = red;
+  stickers[back][low_right] = yellow;
 
-  Cube scrambled(ful,
-                 fur,
-                 fdl,
-                 fdr,
-                 bul,
-                 bur,
-                 bdl,
-                 bdr,
-                 lur,
-                 lul,
-                 ldl,
-                 ldr,
-                 rul,
-                 rur,
-                 rdl,
-                 rdr,
-                 uur,
-                 uul,
-                 udl,
-                 udr,
-                 dur,
-                 dul,
-                 ddl,
-                 ddr);
+  stickers[down][up_left] = red;
+  stickers[down][up_right] = blue;
+  stickers[down][low_left] = red;
+  stickers[down][low_right] = blue;
 
+  Cube cube;
+  Cube scrambled(stickers);
   std::cout << "Searching..." << std::endl;
 
   std::vector<std::string> solution = solver.SolveCube(scrambled);
@@ -69,6 +51,6 @@ int main() {
   for (std::string move: solution) {
     std::cout << move << " ";
   }
-  
+
   return 0;
 }

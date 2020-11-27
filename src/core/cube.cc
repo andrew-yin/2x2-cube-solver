@@ -1,268 +1,230 @@
 #include "core/cube.h"
 
+#include <core/corner.h>
+#include <core/face.h>
+
 namespace cubesolver {
 
-Cube::Cube()
-    : ful_(green),
-      fur_(green),
-      fdl_(green),
-      fdr_(green),
-      bul_(blue),
-      bur_(blue),
-      bdl_(blue),
-      bdr_(blue),
-      lur_(orange),
-      lul_(orange),
-      ldl_(orange),
-      ldr_(orange),
-      uul_(white),
-      uur_(white),
-      udl_(white),
-      udr_(white),
-      dul_(yellow),
-      dur_(yellow),
-      ddl_(yellow),
-      ddr_(yellow),
-      rul_(red),
-      rur_(red),
-      rdl_(red),
-      rdr_(red) {}
+Cube::Cube() : stickers_(kNumFaces, std::vector<Color>(kNumCornersPerFace)) {
+  for (size_t i = 0; i < kNumCornersPerFace; i++) {
+    stickers_[front][i] = green;
+    stickers_[back][i] = blue;
+    stickers_[up][i] = white;
+    stickers_[down][i] = yellow;
+    stickers_[left][i] = orange;
+    stickers_[right][i] = red;
+  }
+}
 
-Cube::Cube(Color ful,
-           Color fur,
-           Color fdl,
-           Color fdr,
-           Color bul,
-           Color bur,
-           Color bdl,
-           Color bdr,
-           Color lur,
-           Color lul,
-           Color ldl,
-           Color ldr,
-           Color rul,
-           Color rur,
-           Color rdl,
-           Color rdr,
-           Color uur,
-           Color uul,
-           Color udl,
-           Color udr,
-           Color dur,
-           Color dul,
-           Color ddl,
-           Color ddr)
-    : ful_(ful),
-      fur_(fur),
-      fdl_(fdl),
-      fdr_(fdr),
-      bul_(bul),
-      bur_(bur),
-      bdl_(bdl),
-      bdr_(bdr),
-      lur_(lur),
-      lul_(lul),
-      ldl_(ldl),
-      ldr_(ldr),
-      rul_(rul),
-      rur_(rur),
-      rdl_(rdl),
-      rdr_(rdr),
-      uur_(uur),
-      uul_(uul),
-      udl_(udl),
-      udr_(udr),
-      dur_(dur),
-      dul_(dul),
-      ddl_(ddl),
-      ddr_(ddr) {}
+Cube::Cube(const std::vector<std::vector<Color>>& stickers)
+    : stickers_(stickers) {
+}
 
 void Cube::MoveU() {
-  Color uur_org = uur_;
-  Color uul_org = uul_;
-  Color udr_org = udr_;
-  Color udl_org = udl_;
+  Color uur_org = stickers_[up][up_right];
+  Color uul_org = stickers_[up][up_left];
+  Color udr_org = stickers_[up][low_right];
+  Color udl_org = stickers_[up][low_left];
 
-  uur_ = uul_org;
-  uul_ = udl_org;
-  udl_ = udr_org;
-  udr_ = uur_org;
+  stickers_[up][up_right] = uul_org;
+  stickers_[up][up_left] = udl_org;
+  stickers_[up][low_left] = udr_org;
+  stickers_[up][low_right] = uur_org;
 
-  Color fur_org = fur_;
-  Color ful_org = ful_;
-  Color lul_org = lul_;
-  Color lur_org = lur_;
-  Color rul_org = rul_;
-  Color rur_org = rur_;
-  Color bur_org = bur_;
-  Color bul_org = bul_;
+  Color fur_org = stickers_[front][up_right];
+  Color ful_org = stickers_[front][up_left];
+  Color lul_org = stickers_[left][up_left];
+  Color lur_org = stickers_[left][up_right];
+  Color rul_org = stickers_[right][up_left];
+  Color rur_org = stickers_[right][up_right];
+  Color bur_org = stickers_[back][up_right];
+  Color bul_org = stickers_[back][up_left];
 
-  ful_ = rul_org;
-  fur_ = rur_org;
-  lur_ = fur_org;
-  lul_ = ful_org;
-  rul_ = bul_org;
-  rur_ = bur_org;
-  bul_ = lul_org;
-  bur_ = lur_org;
+  stickers_[front][up_left] = rul_org;
+  stickers_[front][up_right] = rur_org;
+  stickers_[left][up_right] = fur_org;
+  stickers_[left][up_left] = ful_org;
+  stickers_[right][up_left] = bul_org;
+  stickers_[right][up_right] = bur_org;
+  stickers_[back][up_left] = lul_org;
+  stickers_[back][up_right] = lur_org;
 }
 
 void Cube::MoveD() {
-  Color dur_org = dur_;
-  Color dul_org = dul_;
-  Color ddr_org = ddr_;
-  Color ddl_org = ddl_;
+  Color dur_org = stickers_[down][up_right];
+  Color dul_org = stickers_[down][up_left];
+  Color ddr_org = stickers_[down][low_right];
+  Color ddl_org = stickers_[down][low_left];
 
-  dur_ = dul_org;
-  dul_ = ddl_org;
-  ddl_ = ddr_org;
-  ddr_ = dur_org;
+  stickers_[down][up_right] = dul_org;
+  stickers_[down][up_left] = ddl_org;
+  stickers_[down][low_left] = ddr_org;
+  stickers_[down][low_right] = dur_org;
 
-  Color fdr_org = fdr_;
-  Color fdl_org = fdl_;
-  Color ldl_org = ldl_;
-  Color ldr_org = ldr_;
-  Color rdl_org = rdl_;
-  Color rdr_org = rdr_;
-  Color bdr_org = bdr_;
-  Color bdl_org = bdl_;
+  Color fdr_org = stickers_[front][low_right];
+  Color fdl_org = stickers_[front][low_left];
+  Color ldl_org = stickers_[left][low_left];
+  Color ldr_org = stickers_[left][low_right];
+  Color rdl_org = stickers_[right][low_left];
+  Color rdr_org = stickers_[right][low_right];
+  Color bdr_org = stickers_[back][low_right];
+  Color bdl_org = stickers_[back][low_left];
 
-  fdl_ = ldl_org;
-  fdr_ = ldr_org;
-  ldr_ = bdr_org;
-  ldl_ = bdl_org;
-  rdl_ = fdl_org;
-  rdr_ = fdr_org;
-  bdl_ = rdl_org;
-  bdr_ = rdr_org;
+  stickers_[front][low_left] = ldl_org;
+  stickers_[front][low_right] = ldr_org;
+  stickers_[left][low_right] = bdr_org;
+  stickers_[left][low_left] = bdl_org;
+  stickers_[right][low_left] = fdl_org;
+  stickers_[right][low_right] = fdr_org;
+  stickers_[back][low_left] = rdl_org;
+  stickers_[back][low_right] = rdr_org;
 }
 
 void Cube::MoveL() {
-  Color lur_org = lur_;
-  Color lul_org = lul_;
-  Color ldr_org = ldr_;
-  Color ldl_org = ldl_;
+  Color lur_org = stickers_[left][up_right];
+  Color lul_org = stickers_[left][up_left];
+  Color ldr_org = stickers_[left][low_right];
+  Color ldl_org = stickers_[left][low_left];
 
-  lur_ = lul_org;
-  lul_ = ldl_org;
-  ldl_ = ldr_org;
-  ldr_ = lur_org;
+  stickers_[left][up_right] = lul_org;
+  stickers_[left][up_left] = ldl_org;
+  stickers_[left][low_left] = ldr_org;
+  stickers_[left][low_right] = lur_org;
 
-  Color uul_org = uul_;
-  Color udl_org = udl_;
-  Color ful_org = ful_;
-  Color fdl_org = fdl_;
-  Color bur_org = bur_;
-  Color bdr_org = bdr_;
-  Color dul_org = dul_;
-  Color ddl_org = ddl_;
+  Color uul_org = stickers_[up][up_left];
+  Color udl_org = stickers_[up][low_left];
+  Color ful_org = stickers_[front][up_left];
+  Color fdl_org = stickers_[front][low_left];
+  Color bur_org = stickers_[back][up_right];
+  Color bdr_org = stickers_[back][low_right];
+  Color dul_org = stickers_[down][up_left];
+  Color ddl_org = stickers_[down][low_left];
 
-  ful_ = uul_org;
-  fdl_ = udl_org;
-  uul_ = bdr_org;
-  udl_ = bur_org;
-  dul_ = ful_org;
-  ddl_ = fdl_org;
-  bur_ = ddl_org;
-  bdr_ = dul_org;
+  stickers_[front][up_left] = uul_org;
+  stickers_[front][low_left] = udl_org;
+  stickers_[up][up_left] = bdr_org;
+  stickers_[up][low_left] = bur_org;
+  stickers_[down][up_left] = ful_org;
+  stickers_[down][low_left] = fdl_org;
+  stickers_[back][up_right] = ddl_org;
+  stickers_[back][low_right] = dul_org;
 }
 
 void Cube::MoveR() {
-  Color rur_org = rur_;
-  Color rul_org = rul_;
-  Color rdr_org = rdr_;
-  Color rdl_org = rdl_;
+  Color rur_org = stickers_[right][up_right];
+  Color rul_org = stickers_[right][up_left];
+  Color rdr_org = stickers_[right][low_right];
+  Color rdl_org = stickers_[right][low_left];
 
-  rur_ = rul_org;
-  rul_ = rdl_org;
-  rdl_ = rdr_org;
-  rdr_ = rur_org;
+  stickers_[right][up_right] = rul_org;
+  stickers_[right][up_left] = rdl_org;
+  stickers_[right][low_left] = rdr_org;
+  stickers_[right][low_right] = rur_org;
 
-  Color uur_org = uur_;
-  Color udr_org = udr_;
-  Color fur_org = fur_;
-  Color fdr_org = fdr_;
-  Color bul_org = bul_;
-  Color bdl_org = bdl_;
-  Color dur_org = dur_;
-  Color ddr_org = ddr_;
+  Color uur_org = stickers_[up][up_right];
+  Color udr_org = stickers_[up][low_right];
+  Color fur_org = stickers_[front][up_right];
+  Color fdr_org = stickers_[front][low_right];
+  Color bul_org = stickers_[back][up_left];
+  Color bdl_org = stickers_[back][low_left];
+  Color dur_org = stickers_[down][up_right];
+  Color ddr_org = stickers_[down][low_right];
 
-  fur_ = dur_org;
-  fdr_ = ddr_org;
-  uur_ = fur_org;
-  udr_ = fdr_org;
-  dur_ = bdl_org;
-  ddr_ = bul_org;
-  bul_ = udr_org;
-  bdl_ = uur_org;
+  stickers_[front][up_right] = dur_org;
+  stickers_[front][low_right] = ddr_org;
+  stickers_[up][up_right] = fur_org;
+  stickers_[up][low_right] = fdr_org;
+  stickers_[down][up_right] = bdl_org;
+  stickers_[down][low_right] = bul_org;
+  stickers_[back][up_left] = udr_org;
+  stickers_[back][low_left] = uur_org;
 }
 
 void Cube::MoveB() {
-  Color bur_org = bur_;
-  Color bul_org = bul_;
-  Color bdr_org = bdr_;
-  Color bdl_org = bdl_;
+  Color bur_org = stickers_[back][up_right];
+  Color bul_org = stickers_[back][up_left];
+  Color bdr_org = stickers_[back][low_right];
+  Color bdl_org = stickers_[back][low_left];
 
-  bur_ = bul_org;
-  bul_ = bdl_org;
-  bdl_ = bdr_org;
-  bdr_ = bur_org;
+  stickers_[back][up_right] = bul_org;
+  stickers_[back][up_left] = bdl_org;
+  stickers_[back][low_left] = bdr_org;
+  stickers_[back][low_right] = bur_org;
 
-  Color uur_org = uur_;
-  Color uul_org = uul_;
-  Color rur_org = rur_;
-  Color rdr_org = rdr_;
-  Color lul_org = lul_;
-  Color ldl_org = ldl_;
-  Color ddr_org = ddr_;
-  Color ddl_org = ddl_;
+  Color uur_org = stickers_[up][up_right];
+  Color uul_org = stickers_[up][up_left];
+  Color rur_org = stickers_[right][up_right];
+  Color rdr_org = stickers_[right][low_right];
+  Color lul_org = stickers_[left][up_left];
+  Color ldl_org = stickers_[left][low_left];
+  Color ddr_org = stickers_[down][low_right];
+  Color ddl_org = stickers_[down][low_left];
 
-  uul_ = rur_org;
-  uur_ = rdr_org;
-  rur_ = ddr_org;
-  rdr_ = ddl_org;
-  lul_ = uur_org;
-  ldl_ = uul_org;
-  ddl_ = lul_org;
-  ddr_ = ldl_org;
+  stickers_[up][up_left] = rur_org;
+  stickers_[up][up_right] = rdr_org;
+  stickers_[right][up_right] = ddr_org;
+  stickers_[right][low_right] = ddl_org;
+  stickers_[left][up_left] = uur_org;
+  stickers_[left][low_left] = uul_org;
+  stickers_[down][low_left] = lul_org;
+  stickers_[down][low_right] = ldl_org;
 }
 
 void Cube::MoveF() {
-  Color ful_org = ful_;
-  Color fur_org = fur_;
-  Color fdl_org = fdl_;
-  Color fdr_org = fdr_;
+  Color ful_org = stickers_[front][up_left];
+  Color fur_org = stickers_[front][up_right];
+  Color fdl_org = stickers_[front][low_left];
+  Color fdr_org = stickers_[front][low_right];
 
-  ful_ = fdl_org;
-  fur_ = ful_org;
-  fdl_ = fdr_org;
-  fdr_ = fur_org;
+  stickers_[front][up_left] = fdl_org;
+  stickers_[front][up_right] = ful_org;
+  stickers_[front][low_left] = fdr_org;
+  stickers_[front][low_right] = fur_org;
 
-  Color udl_org = udl_;
-  Color udr_org = udr_;
-  Color rul_org = rul_;
-  Color rdl_org = rdl_;
-  Color lur_org = lur_;
-  Color ldr_org = ldr_;
-  Color dul_org = dul_;
-  Color dur_org = dur_;
+  Color udl_org = stickers_[up][low_left];
+  Color udr_org = stickers_[up][low_right];
+  Color rul_org = stickers_[right][up_left];
+  Color rdl_org = stickers_[right][low_left];
+  Color lur_org = stickers_[left][up_right];
+  Color ldr_org = stickers_[left][low_right];
+  Color dul_org = stickers_[down][up_left];
+  Color dur_org = stickers_[down][up_right];
 
-  udl_ = ldr_org;
-  udr_ = lur_org;
-  rul_ = udl_org;
-  rdl_ = udr_org;
-  lur_ = dul_org;
-  ldr_ = dur_org;
-  dul_ = rdl_org;
-  dur_ = rul_org;
+  stickers_[up][low_left] = ldr_org;
+  stickers_[up][low_right] = lur_org;
+  stickers_[right][up_left] = udl_org;
+  stickers_[right][low_left] = udr_org;
+  stickers_[left][up_right] = dul_org;
+  stickers_[left][low_right] = dur_org;
+  stickers_[down][up_left] = rdl_org;
+  stickers_[down][up_right] = rul_org;
 }
 
-bool Cube::operator==(const Cube &b) const {
-  return (ful_ == b.ful_) && (fur_ == b.fur_) && (fdl_ == b.fdl_) && (fdr_ == b.fdr_) && (lul_ == b.lul_)
-      && (lur_ == b.lur_) && (ldl_ == b.ldl_) && (ldr_ == b.ldr_) && (uul_ == b.uul_) && (uur_ == b.uur_)
-      && (udl_ == b.udl_) && (udr_ == b.udr_) && (rul_ == b.rul_) && (rur_ == b.rur_) && (rdl_ == b.rdl_)
-      && (rdr_ == b.rdr_) && (dul_ == b.dul_) && (dur_ == b.dur_) && (ddl_ == b.ddl_) && (ddr_ == b.ddr_)
-      && (bul_ == b.bul_) && (bur_ == b.bur_) && (bdl_ == b.bdl_) && (bdr_ == b.bdr_);
+bool Cube::operator==(const Cube& b) const {
+  return (stickers_[front][up_left] == b.stickers_[front][up_left]) &&
+         (stickers_[front][up_right] == b.stickers_[front][up_right]) &&
+         (stickers_[front][low_left] == b.stickers_[front][low_left]) &&
+         (stickers_[front][low_right] == b.stickers_[front][low_right]) &&
+         (stickers_[left][up_left] == b.stickers_[left][up_left]) &&
+         (stickers_[left][up_right] == b.stickers_[left][up_right]) &&
+         (stickers_[left][low_left] == b.stickers_[left][low_left]) &&
+         (stickers_[left][low_right] == b.stickers_[left][low_right]) &&
+         (stickers_[up][up_left] == b.stickers_[up][up_left]) &&
+         (stickers_[up][up_right] == b.stickers_[up][up_right]) &&
+         (stickers_[up][low_left] == b.stickers_[up][low_left]) &&
+         (stickers_[up][low_right] == b.stickers_[up][low_right]) &&
+         (stickers_[right][up_left] == b.stickers_[right][up_left]) &&
+         (stickers_[right][up_right] == b.stickers_[right][up_right]) &&
+         (stickers_[right][low_left] == b.stickers_[right][low_left]) &&
+         (stickers_[right][low_right] == b.stickers_[right][low_right]) &&
+         (stickers_[down][up_left] == b.stickers_[down][up_left]) &&
+         (stickers_[down][up_right] == b.stickers_[down][up_right]) &&
+         (stickers_[down][low_left] == b.stickers_[down][low_left]) &&
+         (stickers_[down][low_right] == b.stickers_[down][low_right]) &&
+         (stickers_[back][up_left] == b.stickers_[back][up_left]) &&
+         (stickers_[back][up_right] == b.stickers_[back][up_right]) &&
+         (stickers_[back][low_left] == b.stickers_[back][low_left]) &&
+         (stickers_[back][low_right] == b.stickers_[back][low_right]);
 }
 
-}
+}  // namespace cubesolver

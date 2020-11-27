@@ -49,9 +49,9 @@ get_filename_component(APP_PATH "${CMAKE_CURRENT_SOURCE_DIR}/" ABSOLUTE)
 
 include("${CINDER_PATH}/proj/cmake/modules/cinderMakeApp.cmake")
 
-list(APPEND CORE_SOURCE_FILES src/core/cube.cc include/core/color.h src/core/solver.cc)
+list(APPEND CORE_SOURCE_FILES src/core/cube.cc include/core/color.h include/core/face.h include/core/corner.h src/core/solver.cc)
 
-list(APPEND SOURCE_FILES ${CORE_SOURCE_FILES})
+list(APPEND SOURCE_FILES ${CORE_SOURCE_FILES} src/visualizer/cube_solver_app.cc src/visualizer/sticker.cc)
 
 list(APPEND TEST_FILES)
 
