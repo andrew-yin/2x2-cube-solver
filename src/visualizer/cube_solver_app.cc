@@ -8,7 +8,7 @@ namespace cubesolver {
 
 namespace visualizer {
 
-CubeSolverApp::CubeSolverApp() {
+CubeSolverApp::CubeSolverApp() : current_state_(select_red) {
   ci::app::setWindowSize((int)kWindowWidth, (int)kWindowHeight);
 }
 
@@ -56,12 +56,40 @@ void CubeSolverApp::CreateFace(const Face& face,
 }
 
 void CubeSolverApp::mouseDown(ci::app::MouseEvent event) {
-  glm::vec2 mouse_pos = event.getPos();
+  if (current_state_ != solved) {
+    glm::vec2 mouse_pos = event.getPos();
+    for (size_t i = 0; i < kNumFaces; i++) {
+      for (size_t j = 0; j < kNumCornersPerFace; j++) {
+        Sticker& sticker = stickers_[i][j];
+        if (sticker.IsWithinSticker(mouse_pos)) {
+          Color color;
+          switch (current_state_) {
+            case select_red:
+              color = red;
+              break;
+            case select_orange:
+              color = orange;
+              break;
+            case select_blue:
+              color = blue;
+              break;
+            case select_green:
+              color = green;
+              break;
+            case select_yellow:
+              color = yellow;
+              break;
+          }
+          if (sticker.GetColor() == white) {
+            stickers_[i][j].SetColor(color);
+            color_count_++;
+          }
 
-  for (size_t i = 0; i < kNumFaces; i++) {
-    for (size_t j = 0; j < kNumCornersPerFace; j++) {
-      if (stickers_[i][j].IsWithinSticker(mouse_pos)) {
-        stickers_[i][j].SetColor(blue);
+          if (color_count_ == kNumCornersPerFace) {
+            color_count_ = 0;
+            ++current_state_;
+          }
+        }
       }
     }
   }

@@ -5,6 +5,7 @@
 
 #include <array>
 
+#include "app_state.h"
 #include "cinder/app/App.h"
 #include "cinder/app/RendererGl.h"
 #include "cinder/gl/gl.h"
@@ -29,6 +30,8 @@ class CubeSolverApp : public ci::app::App {
 
  private:
   std::array<std::array<Sticker, kNumCornersPerFace>, kNumFaces> stickers_;
+  AppState current_state_;
+  size_t color_count_;
 
   void CreateFace(const Face& face, const glm::vec2& top_left_corner);
 };
