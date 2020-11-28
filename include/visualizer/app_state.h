@@ -10,6 +10,8 @@ enum AppState {
   select_blue,
   select_green,
   select_yellow,
+  all_selected,
+  solving,
   solved
 };
 
