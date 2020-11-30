@@ -21,36 +21,6 @@ Cube::Cube(const std::array<std::array<Color, kNumCornersPerFace>, kNumFaces>&
     : stickers_(stickers) {
 }
 
-void Cube::MoveU() {
-  Color uur_org = stickers_[up][up_right];
-  Color uul_org = stickers_[up][up_left];
-  Color udr_org = stickers_[up][low_right];
-  Color udl_org = stickers_[up][low_left];
-
-  stickers_[up][up_right] = uul_org;
-  stickers_[up][up_left] = udl_org;
-  stickers_[up][low_left] = udr_org;
-  stickers_[up][low_right] = uur_org;
-
-  Color fur_org = stickers_[front][up_right];
-  Color ful_org = stickers_[front][up_left];
-  Color lul_org = stickers_[left][up_left];
-  Color lur_org = stickers_[left][up_right];
-  Color rul_org = stickers_[right][up_left];
-  Color rur_org = stickers_[right][up_right];
-  Color bur_org = stickers_[back][up_right];
-  Color bul_org = stickers_[back][up_left];
-
-  stickers_[front][up_left] = rul_org;
-  stickers_[front][up_right] = rur_org;
-  stickers_[left][up_right] = fur_org;
-  stickers_[left][up_left] = ful_org;
-  stickers_[right][up_left] = bul_org;
-  stickers_[right][up_right] = bur_org;
-  stickers_[back][up_left] = lul_org;
-  stickers_[back][up_right] = lur_org;
-}
-
 void Cube::MoveD() {
   Color dur_org = stickers_[down][up_right];
   Color dul_org = stickers_[down][up_left];
@@ -79,36 +49,6 @@ void Cube::MoveD() {
   stickers_[right][low_right] = fdr_org;
   stickers_[back][low_left] = rdl_org;
   stickers_[back][low_right] = rdr_org;
-}
-
-void Cube::MoveL() {
-  Color lur_org = stickers_[left][up_right];
-  Color lul_org = stickers_[left][up_left];
-  Color ldr_org = stickers_[left][low_right];
-  Color ldl_org = stickers_[left][low_left];
-
-  stickers_[left][up_right] = lul_org;
-  stickers_[left][up_left] = ldl_org;
-  stickers_[left][low_left] = ldr_org;
-  stickers_[left][low_right] = lur_org;
-
-  Color uul_org = stickers_[up][up_left];
-  Color udl_org = stickers_[up][low_left];
-  Color ful_org = stickers_[front][up_left];
-  Color fdl_org = stickers_[front][low_left];
-  Color bur_org = stickers_[back][up_right];
-  Color bdr_org = stickers_[back][low_right];
-  Color dul_org = stickers_[down][up_left];
-  Color ddl_org = stickers_[down][low_left];
-
-  stickers_[front][up_left] = uul_org;
-  stickers_[front][low_left] = udl_org;
-  stickers_[up][up_left] = bdr_org;
-  stickers_[up][low_left] = bur_org;
-  stickers_[down][up_left] = ful_org;
-  stickers_[down][low_left] = fdl_org;
-  stickers_[back][up_right] = ddl_org;
-  stickers_[back][low_right] = dul_org;
 }
 
 void Cube::MoveR() {
@@ -171,36 +111,6 @@ void Cube::MoveB() {
   stickers_[down][low_right] = ldl_org;
 }
 
-void Cube::MoveF() {
-  Color ful_org = stickers_[front][up_left];
-  Color fur_org = stickers_[front][up_right];
-  Color fdl_org = stickers_[front][low_left];
-  Color fdr_org = stickers_[front][low_right];
-
-  stickers_[front][up_left] = fdl_org;
-  stickers_[front][up_right] = ful_org;
-  stickers_[front][low_left] = fdr_org;
-  stickers_[front][low_right] = fur_org;
-
-  Color udl_org = stickers_[up][low_left];
-  Color udr_org = stickers_[up][low_right];
-  Color rul_org = stickers_[right][up_left];
-  Color rdl_org = stickers_[right][low_left];
-  Color lur_org = stickers_[left][up_right];
-  Color ldr_org = stickers_[left][low_right];
-  Color dul_org = stickers_[down][up_left];
-  Color dur_org = stickers_[down][up_right];
-
-  stickers_[up][low_left] = ldr_org;
-  stickers_[up][low_right] = lur_org;
-  stickers_[right][up_left] = udl_org;
-  stickers_[right][low_left] = udr_org;
-  stickers_[left][up_right] = dul_org;
-  stickers_[left][low_right] = dur_org;
-  stickers_[down][up_left] = rdl_org;
-  stickers_[down][up_right] = rul_org;
-}
-
 bool Cube::operator==(const Cube& b) const {
   return (stickers_[front][up_left] == b.stickers_[front][up_left]) &&
          (stickers_[front][up_right] == b.stickers_[front][up_right]) &&
@@ -226,6 +136,37 @@ bool Cube::operator==(const Cube& b) const {
          (stickers_[back][up_right] == b.stickers_[back][up_right]) &&
          (stickers_[back][low_left] == b.stickers_[back][low_left]) &&
          (stickers_[back][low_right] == b.stickers_[back][low_right]);
+}
+
+Cube::Cube(const Color& front_col, const Color& up_col, const Color& left_col) {
+  Color back_col = GetOppositeSide(front_col);
+  Color down_col = GetOppositeSide(up_col);
+  Color right_col = GetOppositeSide(left_col);
+  for (size_t i = 0; i < kNumCornersPerFace; i++) {
+    stickers_[up][i] = up_col;
+    stickers_[down][i] = down_col;
+    stickers_[left][i] = left_col;
+    stickers_[right][i] = right_col;
+    stickers_[front][i] = front_col;
+    stickers_[back][i] = back_col;
+  }
+}
+
+Color Cube::GetOppositeSide(const Color& color) const {
+  switch (color) {
+    case white:
+      return yellow;
+    case yellow:
+      return white;
+    case red:
+      return orange;
+    case orange:
+      return red;
+    case blue:
+      return green;
+    case green:
+      return blue;
+  }
 }
 
 }  // namespace cubesolver
