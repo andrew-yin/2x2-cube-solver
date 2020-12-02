@@ -35,7 +35,7 @@ class CubeSolverApp : public ci::app::App {
   AppState current_state_;
   size_t color_count_;
   Solver solver_;
-  std::vector<std::string> solution_;
+  std::vector<Move> solution_;
 
   void CreateFace(const Face& face, const glm::vec2& top_left_corner);
   void Clear();

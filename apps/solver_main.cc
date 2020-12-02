@@ -42,14 +42,13 @@ int main() {
   stickers[down][low_left] = red;
   stickers[down][low_right] = blue;
 
-  Cube cube;
   Cube scrambled(stickers);
   std::cout << "Searching..." << std::endl;
 
-  std::vector<std::string> solution = solver.SolveCube(scrambled);
+  std::vector<Move> solution = solver.SolveCube(scrambled);
   std::cout << "Solution: ";
-  for (std::string move: solution) {
-    std::cout << move << " ";
+  for (Move move: solution) {
+    std::cout << MoveToString(move) << " ";
   }
 
   return 0;

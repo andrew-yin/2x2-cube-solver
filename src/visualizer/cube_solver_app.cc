@@ -74,8 +74,8 @@ void CubeSolverApp::draw() {
     solution_msg = "Solving...";
   } else if (current_state_ == solved) {
     std::string separator = "";
-    for (const std::string& move : solution_) {
-      solution_msg += separator + move;
+    for (const Move& move : solution_) {
+      solution_msg += separator + MoveToString(move);
       separator = " ";
     }
   } else {
