@@ -2,11 +2,10 @@
 
 namespace cubesolver {
 
-enum Corner {
-  up_left = 0,
-  up_right = 1,
-  low_left = 2,
-  low_right = 3
-};
+/**
+ * Represents the four locations of each sticker on each face when looking
+ * directly at the face
+ */
+enum Corner { up_left, up_right, low_left, low_right };
 
-}
+}  // namespace cubesolver

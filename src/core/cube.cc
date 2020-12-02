@@ -5,17 +5,6 @@
 
 namespace cubesolver {
 
-Cube::Cube() {
-  for (size_t i = 0; i < kNumCornersPerFace; i++) {
-    stickers_[front][i] = green;
-    stickers_[back][i] = blue;
-    stickers_[up][i] = white;
-    stickers_[down][i] = yellow;
-    stickers_[left][i] = orange;
-    stickers_[right][i] = red;
-  }
-}
-
 Cube::Cube(const std::array<std::array<Color, kNumCornersPerFace>, kNumFaces>&
                stickers)
     : stickers_(stickers) {
@@ -138,30 +127,31 @@ bool Cube::operator==(const Cube& b) const {
          (stickers_[back][low_right] == b.stickers_[back][low_right]);
 }
 
-Cube::Cube(const Color& front_back_col, const Color& up_down_col, const Color& left_right_col, bool is_ful) {
+Cube::Cube(bool is_ful, const Color& front_or_back_color,
+           const Color& left_or_right_color, const Color& up_or_down_color) {
   if (is_ful) {
-    Color back_col = GetOppositeSide(front_back_col);
-    Color down_col = GetOppositeSide(up_down_col);
-    Color right_col = GetOppositeSide(left_right_col);
+    Color back_col = GetOppositeSide(front_or_back_color);
+    Color down_col = GetOppositeSide(up_or_down_color);
+    Color right_col = GetOppositeSide(left_or_right_color);
     for (size_t i = 0; i < kNumCornersPerFace; i++) {
-      stickers_[up][i] = up_down_col;
+      stickers_[up][i] = up_or_down_color;
       stickers_[down][i] = down_col;
-      stickers_[left][i] = left_right_col;
+      stickers_[left][i] = left_or_right_color;
       stickers_[right][i] = right_col;
-      stickers_[front][i] = front_back_col;
+      stickers_[front][i] = front_or_back_color;
       stickers_[back][i] = back_col;
     }
   } else {
-    Color front_col = GetOppositeSide(front_back_col);
-    Color up_col = GetOppositeSide(up_down_col);
-    Color left_col = GetOppositeSide(left_right_col);
+    Color front_col = GetOppositeSide(front_or_back_color);
+    Color up_col = GetOppositeSide(up_or_down_color);
+    Color left_col = GetOppositeSide(left_or_right_color);
     for (size_t i = 0; i < kNumCornersPerFace; i++) {
       stickers_[up][i] = up_col;
-      stickers_[down][i] = up_down_col;
+      stickers_[down][i] = up_or_down_color;
       stickers_[left][i] = left_col;
-      stickers_[right][i] = left_right_col;
+      stickers_[right][i] = left_or_right_color;
       stickers_[front][i] = front_col;
-      stickers_[back][i] = front_back_col;
+      stickers_[back][i] = front_or_back_color;
     }
   }
 }

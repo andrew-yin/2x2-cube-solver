@@ -10,9 +10,18 @@ namespace cubesolver {
 
 namespace visualizer {
 
+/**
+ * A representation of a Sticker drawn in the Cinder application.
+ */
 class Sticker {
  public:
   Sticker() = default;
+  /**
+   * Constructs a sticker at the given location and width.
+   *
+   * @param top_left_corner  The top left corner of the sticker
+   * @param width            The width, in pixels, of the sticker
+   */
   Sticker(const glm::vec2& top_left_corner, const double& width);
 
   void Draw() const;
@@ -20,6 +29,10 @@ class Sticker {
   void SetColor(const Color& color);
   const Color& GetColor() const;
 
+  /**
+   * True if pos is a coordinate within the bounds of the sticker, false
+   * otherwise
+   */
   bool IsWithinSticker(const glm::vec2& pos) const;
 
  private:

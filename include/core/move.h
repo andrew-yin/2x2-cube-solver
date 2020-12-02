@@ -2,6 +2,12 @@
 
 namespace cubesolver {
 
+/**
+ * A representation of the 18 (3 per face, 6 faces) possible singular moves
+ * one can do to the Rubik's cube.
+ *
+ * More info can be found here: https://ruwix.com/the-rubiks-cube/notation/
+ */
 enum Move {
   F,
   Fp,
@@ -24,6 +30,12 @@ enum Move {
   no_move
 };
 
+/**
+ * Converts the given Move enum into a string.
+ *
+ * @param move  The move to be converted
+ * @return      A string corresponding to the given move.
+ */
 inline std::string MoveToString(const Move& move) {
   switch (move) {
     case F:
@@ -67,4 +79,4 @@ inline std::string MoveToString(const Move& move) {
   }
 }
 
-}
+}  // namespace cubesolver

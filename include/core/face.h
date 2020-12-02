@@ -2,13 +2,9 @@
 
 namespace cubesolver {
 
-enum Face {
-  front = 0,
-  back = 1,
-  left = 2,
-  right = 3,
-  up = 4,
-  down = 5
-};
+/**
+ * A Enum representation of the six faces of the Rubik's cube.
+ */
+enum Face { front, back, left, right, up, down };
 
-}
+}  // namespace cubesolver

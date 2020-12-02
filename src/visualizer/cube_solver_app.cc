@@ -13,6 +13,7 @@ CubeSolverApp::CubeSolverApp() : current_state_(select_red), color_count_(0) {
 }
 
 void CubeSolverApp::setup() {
+  /* Initialize all 6 faces of the cube at their respective locations */
   glm::vec2 top_left_corner(2 * kStickerWidth,
                             kWindowHeight / 2 - kStickerWidth);
   CreateFace(left, top_left_corner);
@@ -41,6 +42,7 @@ void CubeSolverApp::draw() {
                              kStickerWidth / 2);
   float font_size = 36;
 
+  /* Generate top instruction message based on the app's current state */
   std::string instructions_msg;
   switch (current_state_) {
     case select_red:
@@ -69,6 +71,8 @@ void CubeSolverApp::draw() {
       break;
   }
 
+  /* Generate a message for where the solution is to be placed based on the
+   * app state */
   std::string solution_msg;
   if (current_state_ == solving) {
     solution_msg = "Solving...";
@@ -90,15 +94,18 @@ void CubeSolverApp::draw() {
                                        kWindowHeight / 2 - kStickerWidth),
                              ci::Color("black"), ci::Font("Arial", font_size));
 
-  ci::gl::drawStringCentered("Press Backspace to clear the whole cube or click once more to reset an individual sticker.",
-                             glm::vec2(kWindowWidth / 2 - 2 * kStickerWidth,
-                                       kWindowHeight - kStickerWidth),
-                             ci::Color("black"), ci::Font("Arial", 20));
+  ci::gl::drawStringCentered(
+      "Press Backspace to clear the whole cube or click once more to reset an "
+      "individual sticker.",
+      glm::vec2(kWindowWidth / 2 - 2 * kStickerWidth,
+                kWindowHeight - kStickerWidth),
+      ci::Color("black"), ci::Font("Arial", 20));
   ci::gl::drawStringCentered(
       solution_msg,
       glm::vec2(kWindowWidth / 2 + 5 * kStickerWidth, kWindowHeight / 2),
       ci::Color("black"), ci::Font("Arial", 24));
 
+  /* Draw each individual sticker of the cube */
   for (size_t i = 0; i < kNumFaces; i++) {
     for (size_t j = 0; j < kNumCornersPerFace; j++) {
       stickers_[i][j].Draw();
