@@ -2,9 +2,23 @@
 
 #include <array>
 
-#include "color.h"
-
 namespace cubesolver {
+
+/**
+ * Represents the six colors that exist on a cube
+ */
+enum Color { white, yellow, red, orange, blue, green };
+
+/**
+ * Represents the four locations of each sticker on each face when looking
+ * directly at the face
+ */
+enum Corner { up_left, up_right, low_left, low_right };
+
+/**
+ * A Enum representation of the six faces of the Rubik's cube.
+ */
+enum Face { front, back, left, right, up, down };
 
 /* The number of faces on a Rubik's cube */
 const size_t kNumFaces = 6;
@@ -51,8 +65,6 @@ struct Cube {
   void MoveF();
   void MoveB();
 
-  bool operator==(const Cube& b) const;
-
   /**
    * The colors of each stickers are stored as stickers_[face][corner]
    * where face is a Face enum representing the face the sticker belongs to
@@ -65,7 +77,6 @@ struct Cube {
    */
   std::array<std::array<Color, kNumCornersPerFace>, kNumFaces> stickers_;
 
- private:
   /**
    * Returns the color of the opposite side of the cube when the cube is in a
    * solved state.
@@ -75,6 +86,8 @@ struct Cube {
    *               specified in the cube's solved state.
    */
   Color GetOppositeSide(const Color& color) const;
+
+  bool operator==(const Cube& b) const;
 };
 
 }  // namespace cubesolver

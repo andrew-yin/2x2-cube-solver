@@ -1,12 +1,19 @@
 #include "visualizer/cube_solver_app.h"
 
-#include <core/corner.h>
 #include <core/cube.h>
-#include <core/face.h>
 
 namespace cubesolver {
 
 namespace visualizer {
+
+AppState& operator++(AppState& state) {
+  if (state == solved) {
+    state = select_red;
+  } else {
+    state = static_cast<AppState>(static_cast<int>(state) + 1);
+  }
+  return state;
+}
 
 CubeSolverApp::CubeSolverApp() : current_state_(select_red), color_count_(0) {
   ci::app::setWindowSize((int)kWindowWidth, (int)kWindowHeight);
@@ -159,17 +166,6 @@ void CubeSolverApp::mouseDown(ci::app::MouseEvent event) {
   }
 }
 
-void CubeSolverApp::CreateFace(const Face& face,
-                               const glm::vec2& top_left_corner) {
-  stickers_[face][up_left] = Sticker(top_left_corner, kStickerWidth);
-  stickers_[face][low_left] =
-      Sticker(top_left_corner + glm::vec2(0, kStickerWidth), kStickerWidth);
-  stickers_[face][low_right] = Sticker(
-      top_left_corner + glm::vec2(kStickerWidth, kStickerWidth), kStickerWidth);
-  stickers_[face][up_right] =
-      Sticker(top_left_corner + glm::vec2(kStickerWidth, 0), kStickerWidth);
-}
-
 void CubeSolverApp::keyDown(ci::app::KeyEvent event) {
   switch (event.getCode()) {
     case ci::app::KeyEvent::KEY_RETURN:
@@ -183,6 +179,17 @@ void CubeSolverApp::keyDown(ci::app::KeyEvent event) {
       Clear();
       break;
   }
+}
+
+void CubeSolverApp::CreateFace(const Face& face,
+                               const glm::vec2& top_left_corner) {
+  stickers_[face][up_left] = Sticker(top_left_corner, kStickerWidth);
+  stickers_[face][low_left] =
+      Sticker(top_left_corner + glm::vec2(0, kStickerWidth), kStickerWidth);
+  stickers_[face][low_right] = Sticker(
+      top_left_corner + glm::vec2(kStickerWidth, kStickerWidth), kStickerWidth);
+  stickers_[face][up_right] =
+      Sticker(top_left_corner + glm::vec2(kStickerWidth, 0), kStickerWidth);
 }
 
 void CubeSolverApp::Clear() {

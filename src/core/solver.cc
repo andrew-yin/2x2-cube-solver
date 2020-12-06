@@ -1,35 +1,52 @@
 #include "core/solver.h"
 
-#include <core/corner.h>
-#include <core/face.h>
-
 #include <queue>
 
 namespace cubesolver {
 
-/**
- * Algorithm overview:
- *
- * The graph is implicitly generated starting from a solved Rubik's cube and
- * is searched for a solution via BFS.
- *
- * The graph has two starting nodes - A solved state in the same orientation
- * as the front-upper-left corner of the Rubik's cube and the bottom-lower-right
- * corner of the cube. This reduces the search space immensely since we no
- * longer need to consider the 24 "distinct" orientations of the same scramble.
- * We also start from two opposite corners to increase the probability of
- * finding a solution in reasonable time.
- *
- * BFS then proceeds from these two nodes. We are careful not to generate
- * scrambles from unnecessary moves by ensuring the same face is not
- * manipulated twice in a row. For example, doing an F move directly followed
- * by an F2 is redundant, since we could have simply done a single F' move
- * to achieve that state.
- *
- * BFS stops when the node traversed onto is the same as the scramble given.
- * The solution then is returned by returning the reverse of the path needed
- * to go from solved to that state.
- */
+std::string MoveToString(const Move& move) {
+  switch (move) {
+    case F:
+      return "F";
+    case Fp:
+      return "F'";
+    case F2:
+      return "F2";
+    case B:
+      return "B";
+    case Bp:
+      return "B'";
+    case B2:
+      return "B2";
+    case U:
+      return "U";
+    case Up:
+      return "U'";
+    case U2:
+      return "U2";
+    case D:
+      return "D";
+    case Dp:
+      return "D'";
+    case D2:
+      return "D2";
+    case R:
+      return "R";
+    case Rp:
+      return "R'";
+    case R2:
+      return "R2";
+    case L:
+      return "L";
+    case Lp:
+      return "L'";
+    case L2:
+      return "L2";
+    default:
+      return "";
+  }
+}
+
 std::vector<Move> Solver::SolveCube(const Cube& scrambled_cube) const {
   /* Queues that represent the nodes generated from the FUL-corner start or the
    * BDR-corner start. */
@@ -227,6 +244,10 @@ bool Solver::IsFrontMove(const Move& move) const {
   return move == F || move == Fp || move == F2;
 }
 
+bool Solver::IsBackMove(const Move& move) const {
+  return move == B || move == Bp || move == B2;
+}
+
 bool Solver::IsRightMove(const Move& move) const {
   return move == R || move == Rp || move == R2;
 }
@@ -237,10 +258,6 @@ bool Solver::IsLeftMove(const Move& move) const {
 
 bool Solver::IsUpMove(const Move& move) const {
   return move == U || move == Up || move == U2;
-}
-
-bool Solver::IsBackMove(const Move& move) const {
-  return move == B || move == Bp || move == B2;
 }
 
 bool Solver::IsDownMove(const Move& move) const {

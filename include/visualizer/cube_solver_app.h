@@ -1,12 +1,10 @@
 #pragma once
 
 #include <core/cube.h>
-#include <core/face.h>
 #include <core/solver.h>
 
 #include <array>
 
-#include "app_state.h"
 #include "cinder/app/App.h"
 #include "cinder/app/RendererGl.h"
 #include "cinder/gl/gl.h"
@@ -15,6 +13,30 @@
 namespace cubesolver {
 
 namespace visualizer {
+
+/**
+ * Enum representation for the different states the application is in
+ */
+enum AppState {
+  /* User currently selecting X-colored stickers */
+  select_red,
+  select_orange,
+  select_blue,
+  select_green,
+  select_yellow,
+  /* User has selected all stickers */
+  all_selected,
+  /* Application is currently computing a solution to the cube */
+  solving,
+  /* Application has output a solution */
+  solved
+};
+
+/**
+ * Overloaded increment operator to facilitate progression from an app state to
+ * the next
+ */
+AppState& operator++(AppState& state);
 
 /**
  * Visual GUI for input of a scrambled cube and ability to view a solution.
@@ -36,7 +58,6 @@ class CubeSolverApp : public ci::app::App {
    */
   const double kWindowWidth = 1600;
   const double kWindowHeight = 900;
-
   const double kStickerWidth = 100;
 
  private:

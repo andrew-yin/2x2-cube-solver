@@ -1,5 +1,3 @@
-#include <core/corner.h>
-#include <core/face.h>
 #include <core/solver.h>
 
 #include <iostream>

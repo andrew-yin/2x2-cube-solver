@@ -2,7 +2,7 @@
 
 #include <cinder/Color.h>
 #include <cinder/Rect.h>
-#include <core/color.h>
+#include <core/cube.h>
 
 #include <glm/vec2.hpp>
 
