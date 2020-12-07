@@ -58,13 +58,11 @@ class Solver {
    * is searched for a solution via BFS.
    *
    * The graph has two starting nodes - A solved state in the same orientation
-   * as the front-upper-left corner of the Rubik's cube and the bottom-lower-right
-   * corner of the cube. This reduces the search space immensely since we no
-   * longer need to consider the 24 "distinct" orientations of the same scramble.
-   * We also start from two opposite corners to increase the probability of
-   * finding a solution in reasonable time.
+   * as the front-upper-left corner of the Rubik's cube. This reduces the search
+   * space immensely since we no longer need to consider the 24 "distinct"
+   * orientations of the same scramble.
    *
-   * BFS then proceeds from these two nodes. We are careful not to generate
+   * BFS then proceeds from this node. We are careful not to generate
    * scrambles from unnecessary moves by ensuring the same face is not
    * manipulated twice in a row. For example, doing an F move directly followed
    * by an F2 is redundant, since we could have simply done a single F' move
@@ -79,7 +77,7 @@ class Solver {
    *                        The i-th index represents the (i+1)-th move to
    *                        do to the scrambled cube to solve it.
    */
-  std::vector<Move> SolveCube(const Cube& scrambled_cube) const;
+  std::vector<Move> SolveCube(Cube scrambled_cube) const;
 
  private:
   /**
@@ -89,11 +87,8 @@ class Solver {
    * @param move  The move to be determined
    * @return      True if the move manipulates the face, false otherwise
    */
-  bool IsFrontMove(const Move& move) const;
   bool IsBackMove(const Move& move) const;
   bool IsRightMove(const Move& move) const;
-  bool IsLeftMove(const Move& move) const;
-  bool IsUpMove(const Move& move) const;
   bool IsDownMove(const Move& move) const;
 };
 

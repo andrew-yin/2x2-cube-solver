@@ -1,13 +1,24 @@
 #pragma once
 
 #include <array>
+#include <string>
 
 namespace cubesolver {
+
+typedef std::string ID;
 
 /**
  * Represents the six colors that exist on a cube
  */
 enum Color { white, yellow, red, orange, blue, green };
+
+/**
+ * Returns a char representation of a Color enum
+ *
+ * @param color  The color to get the char representation of
+ * @return       The char representing the Color
+ */
+char ColorToChar(const Color& color);
 
 /**
  * Represents the four locations of each sticker on each face when looking
@@ -31,18 +42,14 @@ const size_t kNumCornersPerFace = 4;
  */
 struct Cube {
   /**
-   * Constructs a solved Rubik's cube based on whether or not the parameters
-   * given are from the front, up, and left sides or the back, down, and right
-   * sides.
+   * Constructs a solved Rubik's cube based on desired front, up, and left
+   * colors
    *
-   * @param is_ful               True if the colors come from the FUL sides and
-   *                             false if the colors come from the BDR sides
-   * @param front_or_back_color  The front/back color depending on is_ful
-   * @param up_or_down_color     The up/down color depending on is_ful
-   * @param left_or_right_color  The left/right color depending on is_ful
+   * @param f_color  The front/back color depending on is_ful
+   * @param u_color     The up/down color depending on is_ful
+   * @param l_color  The left/right color depending on is_ful
    */
-  Cube(bool is_ful, const Color& front_or_back_color,
-       const Color& left_or_right_color, const Color& up_or_down_color);
+  Cube(const Color& f_color, const Color& u_color, const Color& l_color);
 
   /**
    * Constructs a Rubik's cube based on a 2D array of the stickers' colors
@@ -58,11 +65,8 @@ struct Cube {
    * of a 90 degree clockwise rotation of the specified face when the face is
    * looked at directly.
    */
-  void MoveU();
   void MoveD();
   void MoveR();
-  void MoveL();
-  void MoveF();
   void MoveB();
 
   /**
@@ -86,6 +90,14 @@ struct Cube {
    *               specified in the cube's solved state.
    */
   Color GetOppositeSide(const Color& color) const;
+
+  /**
+   * Generates a unique ID corresponding to the current state of the Rubik's
+   * cube
+   *
+   * @return  The unique ID described above
+   */
+  ID GetID() const;
 
   bool operator==(const Cube& b) const;
 };

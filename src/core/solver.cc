@@ -1,6 +1,7 @@
 #include "core/solver.h"
 
 #include <queue>
+#include <unordered_map>
 
 namespace cubesolver {
 
@@ -42,206 +43,278 @@ std::string MoveToString(const Move& move) {
       return "L'";
     case L2:
       return "L2";
-    default:
+    case no_move:
       return "";
   }
 }
 
-std::vector<Move> Solver::SolveCube(const Cube& scrambled_cube) const {
-  /* Queues that represent the nodes generated from the FUL-corner start or the
-   * BDR-corner start. */
-  std::queue<std::pair<Cube, std::vector<Move>>> ful_queue;
-  std::queue<std::pair<Cube, std::vector<Move>>> bdr_queue;
+std::vector<Move> Solver::SolveCube(Cube scrambled_cube) const {
+  std::queue<std::pair<Cube, std::vector<Move>>> from_solved_queue;
+  std::unordered_map<ID, std::vector<Move>> past_from_solved_states;
 
-  /* Start each queue by pushing the respective starting solved cubes */
-  Cube ful_start(true, scrambled_cube.stickers_[front][up_left],
-                 scrambled_cube.stickers_[left][up_right],
-                 scrambled_cube.stickers_[up][low_left]);
-  ful_queue.push(
-      std::pair<Cube, std::vector<Move>>(ful_start, std::vector<Move>()));
+  Cube solved_cube(scrambled_cube.stickers_[front][up_left],
+                   scrambled_cube.stickers_[up][low_left],
+                   scrambled_cube.stickers_[left][up_right]);
+  from_solved_queue.push(
+      std::pair<Cube, std::vector<Move>>(solved_cube, std::vector<Move>()));
+  past_from_solved_states[solved_cube.GetID()] = std::vector<Move>();
 
-  Cube bdr_start(false, scrambled_cube.stickers_[back][low_left],
-                 scrambled_cube.stickers_[right][low_right],
-                 scrambled_cube.stickers_[down][low_right]);
-  bdr_queue.push(
-      std::pair<Cube, std::vector<Move>>(bdr_start, std::vector<Move>()));
+  std::queue<std::pair<Cube, std::vector<Move>>> from_scrambled_queue;
+  std::unordered_map<ID, std::vector<Move>> past_from_scrambled_states;
+  from_scrambled_queue.push(
+      std::pair<Cube, std::vector<Move>>(scrambled_cube, std::vector<Move>()));
+  past_from_scrambled_states[scrambled_cube.GetID()] = std::vector<Move>();
 
-  while (!ful_queue.empty() && !bdr_queue.empty()) {
-    std::pair<Cube, std::vector<Move>> ful_cube_scramble = ful_queue.front();
-    ful_queue.pop();
+  while (!from_solved_queue.empty() && !from_scrambled_queue.empty()) {
+    std::pair<Cube, std::vector<Move>> from_solved_cube_scramble =
+        from_solved_queue.front();
+    from_solved_queue.pop();
 
-    Cube ful_cube = ful_cube_scramble.first;
-    std::vector<Move> ful_scramble = ful_cube_scramble.second;
+    Cube from_solved_cube = from_solved_cube_scramble.first;
+    std::vector<Move> from_solved_scramble = from_solved_cube_scramble.second;
 
-    std::pair<Cube, std::vector<Move>> bdr_cube_scramble = bdr_queue.front();
-    bdr_queue.pop();
+    std::pair<Cube, std::vector<Move>> from_scrambled_cube_scramble =
+        from_scrambled_queue.front();
+    from_scrambled_queue.pop();
 
-    Cube bdr_cube = bdr_cube_scramble.first;
-    std::vector<Move> bdr_scramble = bdr_cube_scramble.second;
+    Cube from_scrambled_cube = from_scrambled_cube_scramble.first;
+    std::vector<Move> from_scrambled_scramble =
+        from_scrambled_cube_scramble.second;
 
-    if (ful_cube == scrambled_cube) {
+    auto searched_from_scrambled_cube =
+        past_from_scrambled_states.find(from_solved_cube.GetID());
+    if (searched_from_scrambled_cube != past_from_scrambled_states.end()) {
       std::vector<Move> solution;
-      for (auto i = ful_scramble.rbegin(); i != ful_scramble.rend(); i++) {
-        solution.push_back(*i);
+
+      for (const Move& move : searched_from_scrambled_cube->second) {
+        solution.push_back(move);
       }
-      return solution;
-    } else if (bdr_cube == scrambled_cube) {
-      std::vector<Move> solution;
-      for (auto i = bdr_scramble.rbegin(); i != bdr_scramble.rend(); i++) {
-        solution.push_back(*i);
+      for (auto move = from_solved_scramble.rbegin();
+           move != from_solved_scramble.rend(); move++) {
+        solution.push_back(*move);
       }
       return solution;
     }
 
-    /* For the FUL-corner graph, we only consider back, right, and down moves
-     * since otherwise we would break the fixed orientation set by the corner.
+    auto searched_from_solved_cube =
+        past_from_solved_states.find(from_scrambled_cube.GetID());
+    if (searched_from_solved_cube != past_from_solved_states.end()) {
+      std::vector<Move> solution;
+
+      for (const Move& move : from_scrambled_scramble) {
+        solution.push_back(move);
+      }
+      for (auto move = searched_from_solved_cube->second.rbegin();
+           move != searched_from_solved_cube->second.rend(); move++) {
+        solution.push_back(*move);
+      }
+      return solution;
+    }
+
+    /* We only consider back, right, and down move since otherwise we would
+     * break the fixed orientation set by the corner.
      *
-     * Sidenote: We add the opposite of the move to the scramble vector since we
-     * are traversing backwards from a solved solution. This simply makes
+     * Side note: We add the opposite of the move to the scramble vector since
+     * we are traversing backwards from a solved solution. This simply makes
      * outputting a solution easier */
-    Move ful_last_move = !ful_scramble.empty() ? ful_scramble.back() : no_move;
-    if (!IsBackMove(ful_last_move) || ful_last_move == no_move) {
-      ful_cube.MoveB();
-      ful_scramble.push_back(Bp);
-      ful_queue.push(
-          std::pair<Cube, std::vector<Move>>(ful_cube, ful_scramble));
-      ful_scramble.pop_back();
+    Move from_solved_last_move =
+        !from_solved_scramble.empty() ? from_solved_scramble.back() : no_move;
+    if (!IsBackMove(from_solved_last_move) ||
+        from_solved_last_move == no_move) {
+      from_solved_cube.MoveB();
+      if (past_from_solved_states.count(from_solved_cube.GetID()) == 0) {
+        from_solved_scramble.push_back(Bp);
+        from_solved_queue.push(std::pair<Cube, std::vector<Move>>(
+            from_solved_cube, from_solved_scramble));
+        past_from_solved_states[from_solved_cube.GetID()] =
+            from_solved_scramble;
+        from_solved_scramble.pop_back();
+      }
 
-      ful_cube.MoveB();
-      ful_scramble.push_back(B2);
-      ful_queue.push(
-          std::pair<Cube, std::vector<Move>>(ful_cube, ful_scramble));
-      ful_scramble.pop_back();
+      from_solved_cube.MoveB();
+      if (past_from_solved_states.count(from_solved_cube.GetID()) == 0) {
+        from_solved_scramble.push_back(B2);
+        from_solved_queue.push(std::pair<Cube, std::vector<Move>>(
+            from_solved_cube, from_solved_scramble));
+        past_from_solved_states[from_solved_cube.GetID()] =
+            from_solved_scramble;
+        from_solved_scramble.pop_back();
+      }
 
-      ful_cube.MoveB();
-      ful_scramble.push_back(B);
-      ful_queue.push(
-          std::pair<Cube, std::vector<Move>>(ful_cube, ful_scramble));
-      ful_scramble.pop_back();
+      from_solved_cube.MoveB();
+      if (past_from_solved_states.count(from_solved_cube.GetID()) == 0) {
+        from_solved_scramble.push_back(B);
+        from_solved_queue.push(std::pair<Cube, std::vector<Move>>(
+            from_solved_cube, from_solved_scramble));
+        past_from_solved_states[from_solved_cube.GetID()] =
+            from_solved_scramble;
+        from_solved_scramble.pop_back();
+      }
 
-      ful_cube.MoveB();
+      from_solved_cube.MoveB();
     }
 
-    if (!IsRightMove(ful_last_move) || ful_last_move == no_move) {
-      ful_cube.MoveR();
-      ful_scramble.push_back(Rp);
-      ful_queue.push(
-          std::pair<Cube, std::vector<Move>>(ful_cube, ful_scramble));
-      ful_scramble.pop_back();
+    if (!IsRightMove(from_solved_last_move) ||
+        from_solved_last_move == no_move) {
+      from_solved_cube.MoveR();
+      if (past_from_solved_states.count(from_solved_cube.GetID()) == 0) {
+        from_solved_scramble.push_back(Rp);
+        from_solved_queue.push(std::pair<Cube, std::vector<Move>>(
+            from_solved_cube, from_solved_scramble));
+        past_from_solved_states[from_solved_cube.GetID()] =
+            from_solved_scramble;
+        from_solved_scramble.pop_back();
+      }
 
-      ful_cube.MoveR();
-      ful_scramble.push_back(R2);
-      ful_queue.push(
-          std::pair<Cube, std::vector<Move>>(ful_cube, ful_scramble));
-      ful_scramble.pop_back();
+      from_solved_cube.MoveR();
+      if (past_from_solved_states.count(from_solved_cube.GetID()) == 0) {
+        from_solved_scramble.push_back(R2);
+        from_solved_queue.push(std::pair<Cube, std::vector<Move>>(
+            from_solved_cube, from_solved_scramble));
+        past_from_solved_states[from_solved_cube.GetID()] =
+            from_solved_scramble;
+        from_solved_scramble.pop_back();
+      }
 
-      ful_cube.MoveR();
-      ful_scramble.push_back(R);
-      ful_queue.push(
-          std::pair<Cube, std::vector<Move>>(ful_cube, ful_scramble));
-      ful_scramble.pop_back();
+      from_solved_cube.MoveR();
+      if (past_from_solved_states.count(from_solved_cube.GetID()) == 0) {
+        from_solved_scramble.push_back(R);
+        from_solved_queue.push(std::pair<Cube, std::vector<Move>>(
+            from_solved_cube, from_solved_scramble));
+        past_from_solved_states[from_solved_cube.GetID()] =
+            from_solved_scramble;
+        from_solved_scramble.pop_back();
+      }
 
-      ful_cube.MoveR();
+      from_solved_cube.MoveR();
     }
 
-    if (!IsDownMove(ful_last_move) || ful_last_move == no_move) {
-      ful_cube.MoveD();
-      ful_scramble.push_back(Dp);
-      ful_queue.push(
-          std::pair<Cube, std::vector<Move>>(ful_cube, ful_scramble));
-      ful_scramble.pop_back();
+    if (!IsDownMove(from_solved_last_move) ||
+        from_solved_last_move == no_move) {
+      from_solved_cube.MoveD();
+      if (past_from_solved_states.count(from_solved_cube.GetID()) == 0) {
+        from_solved_scramble.push_back(Dp);
+        from_solved_queue.push(std::pair<Cube, std::vector<Move>>(
+            from_solved_cube, from_solved_scramble));
+        past_from_solved_states[from_solved_cube.GetID()] =
+            from_solved_scramble;
+        from_solved_scramble.pop_back();
+      }
 
-      ful_cube.MoveD();
-      ful_scramble.push_back(D2);
-      ful_queue.push(
-          std::pair<Cube, std::vector<Move>>(ful_cube, ful_scramble));
-      ful_scramble.pop_back();
+      from_solved_cube.MoveD();
+      if (past_from_solved_states.count(from_solved_cube.GetID()) == 0) {
+        from_solved_scramble.push_back(D2);
+        from_solved_queue.push(std::pair<Cube, std::vector<Move>>(
+            from_solved_cube, from_solved_scramble));
+        past_from_solved_states[from_solved_cube.GetID()] =
+            from_solved_scramble;
+        from_solved_scramble.pop_back();
+      }
 
-      ful_cube.MoveD();
-      ful_scramble.push_back(D);
-      ful_queue.push(
-          std::pair<Cube, std::vector<Move>>(ful_cube, ful_scramble));
-      ful_scramble.pop_back();
+      from_solved_cube.MoveD();
+      if (past_from_solved_states.count(from_solved_cube.GetID()) == 0) {
+        from_solved_scramble.push_back(D);
+        from_solved_queue.push(std::pair<Cube, std::vector<Move>>(
+            from_solved_cube, from_solved_scramble));
+        past_from_solved_states[from_solved_cube.GetID()] =
+            from_solved_scramble;
+        from_solved_scramble.pop_back();
+      }
 
-      ful_cube.MoveD();
+      from_solved_cube.MoveD();
     }
 
-    /*
-     * For the BDR-corner graph, we only consider front, left, and up moves
-     * since otherwise we would break the fixed orientation set by the corner.
-     */
-    Move bdr_last_move = !bdr_scramble.empty() ? bdr_scramble.back() : no_move;
-    if (!IsUpMove(bdr_last_move) || bdr_last_move == no_move) {
-      bdr_cube.MoveU();
-      bdr_scramble.push_back(Up);
-      bdr_queue.push(
-          std::pair<Cube, std::vector<Move>>(bdr_cube, bdr_scramble));
-      bdr_scramble.pop_back();
+    Move from_scrambled_last_move = !from_scrambled_scramble.empty()
+                                        ? from_scrambled_scramble.back()
+                                        : no_move;
+    if (!IsBackMove(from_scrambled_last_move) ||
+        from_scrambled_last_move == no_move) {
+      from_scrambled_cube.MoveB();
+      if (past_from_scrambled_states.count(from_scrambled_cube.GetID()) == 0) {
+        from_scrambled_scramble.push_back(B);
+        from_scrambled_queue.push(std::pair<Cube, std::vector<Move>>(
+            from_scrambled_cube, from_scrambled_scramble));
+        from_scrambled_scramble.pop_back();
+      }
 
-      bdr_cube.MoveU();
-      bdr_scramble.push_back(U2);
-      bdr_queue.push(
-          std::pair<Cube, std::vector<Move>>(bdr_cube, bdr_scramble));
-      bdr_scramble.pop_back();
+      from_scrambled_cube.MoveB();
+      if (past_from_scrambled_states.count(from_scrambled_cube.GetID()) == 0) {
+        from_scrambled_scramble.push_back(B2);
+        from_scrambled_queue.push(std::pair<Cube, std::vector<Move>>(
+            from_scrambled_cube, from_scrambled_scramble));
+        from_scrambled_scramble.pop_back();
+      }
 
-      bdr_cube.MoveU();
-      bdr_scramble.push_back(U);
-      bdr_queue.push(
-          std::pair<Cube, std::vector<Move>>(bdr_cube, bdr_scramble));
-      bdr_scramble.pop_back();
+      from_scrambled_cube.MoveB();
+      if (past_from_scrambled_states.count(from_scrambled_cube.GetID()) == 0) {
+        from_scrambled_scramble.push_back(Bp);
+        from_scrambled_queue.push(std::pair<Cube, std::vector<Move>>(
+            from_scrambled_cube, from_scrambled_scramble));
+        from_scrambled_scramble.pop_back();
+      }
 
-      bdr_cube.MoveU();
+      from_scrambled_cube.MoveB();
     }
 
-    if (IsFrontMove(bdr_last_move) || bdr_last_move == no_move) {
-      bdr_cube.MoveF();
-      bdr_scramble.push_back(Fp);
-      bdr_queue.push(
-          std::pair<Cube, std::vector<Move>>(bdr_cube, bdr_scramble));
-      bdr_scramble.pop_back();
+    if (!IsRightMove(from_scrambled_last_move) ||
+        from_scrambled_last_move == no_move) {
+      from_scrambled_cube.MoveR();
+      if (past_from_scrambled_states.count(from_scrambled_cube.GetID()) == 0) {
+        from_scrambled_scramble.push_back(R);
+        from_scrambled_queue.push(std::pair<Cube, std::vector<Move>>(
+            from_scrambled_cube, from_scrambled_scramble));
+        from_scrambled_scramble.pop_back();
+      }
 
-      bdr_cube.MoveF();
-      bdr_scramble.push_back(F2);
-      bdr_queue.push(
-          std::pair<Cube, std::vector<Move>>(bdr_cube, bdr_scramble));
-      bdr_scramble.pop_back();
+      from_scrambled_cube.MoveR();
+      if (past_from_scrambled_states.count(from_scrambled_cube.GetID()) == 0) {
+        from_scrambled_scramble.push_back(R2);
+        from_scrambled_queue.push(std::pair<Cube, std::vector<Move>>(
+            from_scrambled_cube, from_scrambled_scramble));
+        from_scrambled_scramble.pop_back();
+      }
 
-      bdr_cube.MoveF();
-      bdr_scramble.push_back(F);
-      bdr_queue.push(
-          std::pair<Cube, std::vector<Move>>(bdr_cube, bdr_scramble));
-      bdr_scramble.pop_back();
+      from_scrambled_cube.MoveR();
+      if (past_from_scrambled_states.count(from_scrambled_cube.GetID()) == 0) {
+        from_scrambled_scramble.push_back(Rp);
+        from_scrambled_queue.push(std::pair<Cube, std::vector<Move>>(
+            from_scrambled_cube, from_scrambled_scramble));
+        from_scrambled_scramble.pop_back();
+      }
 
-      bdr_cube.MoveF();
+      from_scrambled_cube.MoveR();
     }
 
-    if (!IsLeftMove(bdr_last_move) || bdr_last_move == no_move) {
-      bdr_cube.MoveL();
-      bdr_scramble.push_back(Lp);
-      bdr_queue.push(
-          std::pair<Cube, std::vector<Move>>(bdr_cube, bdr_scramble));
-      bdr_scramble.pop_back();
+    if (!IsDownMove(from_scrambled_last_move) ||
+        from_scrambled_last_move == no_move) {
+      from_scrambled_cube.MoveD();
+      if (past_from_scrambled_states.count(from_scrambled_cube.GetID()) == 0) {
+        from_scrambled_scramble.push_back(D);
+        from_scrambled_queue.push(std::pair<Cube, std::vector<Move>>(
+            from_scrambled_cube, from_scrambled_scramble));
+        from_scrambled_scramble.pop_back();
+      }
 
-      bdr_cube.MoveL();
-      bdr_scramble.push_back(L2);
-      bdr_queue.push(
-          std::pair<Cube, std::vector<Move>>(bdr_cube, bdr_scramble));
-      bdr_scramble.pop_back();
+      from_scrambled_cube.MoveD();
+      if (past_from_scrambled_states.count(from_scrambled_cube.GetID()) == 0) {
+        from_scrambled_scramble.push_back(D2);
+        from_scrambled_queue.push(std::pair<Cube, std::vector<Move>>(
+            from_scrambled_cube, from_scrambled_scramble));
+        from_scrambled_scramble.pop_back();
+      }
 
-      bdr_cube.MoveL();
-      bdr_scramble.push_back(L);
-      bdr_queue.push(
-          std::pair<Cube, std::vector<Move>>(bdr_cube, bdr_scramble));
-      bdr_scramble.pop_back();
+      from_scrambled_cube.MoveD();
+      if (past_from_scrambled_states.count(from_scrambled_cube.GetID()) == 0) {
+        from_scrambled_scramble.push_back(Dp);
+        from_scrambled_queue.push(std::pair<Cube, std::vector<Move>>(
+            from_scrambled_cube, from_scrambled_scramble));
+        from_scrambled_scramble.pop_back();
+      }
 
-      bdr_cube.MoveL();
+      from_scrambled_cube.MoveD();
     }
   }
   return std::vector<Move>();
-}
-
-bool Solver::IsFrontMove(const Move& move) const {
-  return move == F || move == Fp || move == F2;
 }
 
 bool Solver::IsBackMove(const Move& move) const {
@@ -250,14 +323,6 @@ bool Solver::IsBackMove(const Move& move) const {
 
 bool Solver::IsRightMove(const Move& move) const {
   return move == R || move == Rp || move == R2;
-}
-
-bool Solver::IsLeftMove(const Move& move) const {
-  return move == L || move == Lp || move == L2;
-}
-
-bool Solver::IsUpMove(const Move& move) const {
-  return move == U || move == Up || move == U2;
 }
 
 bool Solver::IsDownMove(const Move& move) const {
