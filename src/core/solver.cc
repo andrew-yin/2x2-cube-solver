@@ -44,7 +44,7 @@ std::string MoveToString(const Move& move) {
     case L2:
       return "L2";
     case no_move:
-      return "";
+      return "Error";
   }
 }
 
@@ -314,7 +314,8 @@ std::vector<Move> Solver::SolveCube(Cube scrambled_cube) const {
       from_scrambled_cube.MoveD();
     }
   }
-  return std::vector<Move>();
+
+  return std::vector<Move>({no_move});
 }
 
 bool Solver::IsBackMove(const Move& move) const {

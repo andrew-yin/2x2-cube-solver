@@ -45,9 +45,9 @@ struct Cube {
    * Constructs a solved Rubik's cube based on desired front, up, and left
    * colors
    *
-   * @param f_color  The front/back color depending on is_ful
-   * @param u_color     The up/down color depending on is_ful
-   * @param l_color  The left/right color depending on is_ful
+   * @param f_color  The front color
+   * @param u_color  The up color
+   * @param l_color  The left color
    */
   Cube(const Color& f_color, const Color& u_color, const Color& l_color);
 
@@ -57,8 +57,8 @@ struct Cube {
    * @param stickers  The sticker colors given (see below for details as to
    *                  how the stickers are stored in the array)
    */
-  explicit Cube(const std::array<std::array<Color, kNumCornersPerFace>,
-                                 kNumFaces>& stickers);
+  Cube(const std::array<std::array<Color, kNumCornersPerFace>, kNumFaces>&
+           stickers);
 
   /**
    * Various manipulations of the Cube's stickers. Each move is representative
