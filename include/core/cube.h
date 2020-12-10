@@ -5,6 +5,10 @@
 
 namespace cubesolver {
 
+/**
+ * Each cube state can be assigned a unique 24-character-length ID based on
+ * the position of the colors on the cube
+ */
 typedef std::string ID;
 
 /**

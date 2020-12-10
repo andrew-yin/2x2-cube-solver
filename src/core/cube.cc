@@ -157,30 +157,17 @@ ID Cube::GetID() const {
 }
 
 bool Cube::operator==(const Cube& b) const {
-  return (stickers_[kFront][kUpperLeft] == b.stickers_[kFront][kUpperLeft]) &&
-         (stickers_[kFront][kUpperRight] == b.stickers_[kFront][kUpperRight]) &&
-         (stickers_[kFront][kLowerLeft] == b.stickers_[kFront][kLowerLeft]) &&
-         (stickers_[kFront][kLowerRight] == b.stickers_[kFront][kLowerRight]) &&
-         (stickers_[kLeft][kUpperLeft] == b.stickers_[kLeft][kUpperLeft]) &&
-         (stickers_[kLeft][kUpperRight] == b.stickers_[kLeft][kUpperRight]) &&
-         (stickers_[kLeft][kLowerLeft] == b.stickers_[kLeft][kLowerLeft]) &&
-         (stickers_[kLeft][kLowerRight] == b.stickers_[kLeft][kLowerRight]) &&
-         (stickers_[kUp][kUpperLeft] == b.stickers_[kUp][kUpperLeft]) &&
-         (stickers_[kUp][kUpperRight] == b.stickers_[kUp][kUpperRight]) &&
-         (stickers_[kUp][kLowerLeft] == b.stickers_[kUp][kLowerLeft]) &&
-         (stickers_[kUp][kLowerRight] == b.stickers_[kUp][kLowerRight]) &&
-         (stickers_[kRight][kUpperLeft] == b.stickers_[kRight][kUpperLeft]) &&
-         (stickers_[kRight][kUpperRight] == b.stickers_[kRight][kUpperRight]) &&
-         (stickers_[kRight][kLowerLeft] == b.stickers_[kRight][kLowerLeft]) &&
-         (stickers_[kRight][kLowerRight] == b.stickers_[kRight][kLowerRight]) &&
-         (stickers_[kDown][kUpperLeft] == b.stickers_[kDown][kUpperLeft]) &&
-         (stickers_[kDown][kUpperRight] == b.stickers_[kDown][kUpperRight]) &&
-         (stickers_[kDown][kLowerLeft] == b.stickers_[kDown][kLowerLeft]) &&
-         (stickers_[kDown][kLowerRight] == b.stickers_[kDown][kLowerRight]) &&
-         (stickers_[kBack][kUpperLeft] == b.stickers_[kBack][kUpperLeft]) &&
-         (stickers_[kBack][kUpperRight] == b.stickers_[kBack][kUpperRight]) &&
-         (stickers_[kBack][kLowerLeft] == b.stickers_[kBack][kLowerLeft]) &&
-         (stickers_[kBack][kLowerRight] == b.stickers_[kBack][kLowerRight]);
+  bool isEqual = true;
+  for (size_t i = 0; i < kNumFaces; i++) {
+    for (size_t j = 0; j < kNumCornersPerFace; j++) {
+      if (stickers_[i][j] != b.stickers_[i][j]) {
+        isEqual = false;
+        break;
+      }
+    }
+  }
+
+  return isEqual;
 }
 
 }  // namespace cubesolver
