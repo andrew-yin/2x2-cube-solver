@@ -1,6 +1,8 @@
 #pragma once
 
+#include <queue>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 #include "cube.h"
@@ -49,6 +51,8 @@ std::string MoveToString(const Move& move);
  */
 class Solver {
  public:
+  Solver() = default;
+
   /**
    * Solves the given Rubik's cube.
    *
@@ -69,17 +73,86 @@ class Solver {
    * single F' move to achieve that state.
    *
    * BFS stops when the two generated graphs intersect at a common state. The
-   * solution is then outputted by backtracking through both paths to get to
-   * this state.
+   * solution is then outputted by backtracking through the two paths that lead
+   * to this state.
    *
    * @param scrambled_cube  The scrambled cube to be solved.
    * @return                A vector of moves needed to solve the Rubik's cube.
    *                        The i-th index represents the (i+1)-th move to
    *                        do to the scrambled cube to solve it.
    */
-  std::vector<Move> SolveCube(Cube scrambled_cube) const;
+  std::vector<Move> SolveCube(Cube scrambled_cube);
 
  private:
+  /**
+   * Queues and unordered maps used for BFS from the two starting nodes of
+   * a solved state and the scrambled state
+   */
+  std::queue<std::pair<Cube, std::vector<Move>>> from_solved_queue_;
+  std::unordered_map<ID, std::vector<Move>> past_from_solved_states_;
+
+  std::queue<std::pair<Cube, std::vector<Move>>> from_scrambled_queue_;
+  std::unordered_map<ID, std::vector<Move>> past_from_scrambled_states_;
+
+  /**
+   * Resets the instance of the Solver class to prepare for the next solve
+   */
+  void Reset();
+  /**
+   * Initializes the solver based on the scramble given
+   *
+   * @param scrambled_cube  The scramble given
+   */
+  void Initialize(const Cube& scrambled_cube);
+
+  /**
+   * Generates the next set of nodes for the graphs in BFS by manipulating the
+   * back, right, and/or down faces of the current node
+   *
+   * @param from_solved_cube       The cube state of the current node from the
+   *                               graph with the solved state starting node
+   * @param from_solved_scramble   The scramble of the current node from the
+   *                               graph with the solved state starting node
+   * @param from_solved_last_move  The last move needed to reach the current
+   *                               node from the graph with the solved state
+   *                               starting node.
+   *
+   * (These params are analogous to the three above, except they come from
+   *  the graph with the scrambled cube as the starting node)
+   * @param from_scrambled_cube
+   * @param from_scrambled_scramble
+   * @param from_scrambled_last_move
+   */
+  void GenerateBackNodes(Cube& from_solved_cube,
+                         std::vector<Move>& from_solved_scramble,
+                         const Move& from_solved_last_move,
+                         Cube& from_scrambled_cube,
+                         std::vector<Move>& from_scrambled_scramble,
+                         const Move& from_scrambled_last_move);
+  void GenerateRightNodes(Cube& from_solved_cube, Cube& from_scrambled_cube,
+                          std::vector<Move>& from_solved_scramble,
+                          std::vector<Move>& from_scrambled_scramble,
+                          const Move& from_solved_last_move,
+                          const Move& from_scrambled_last_move);
+  void GenerateDownNodes(Cube& from_solved_cube, Cube& from_scrambled_cube,
+                         std::vector<Move>& from_solved_scramble,
+                         std::vector<Move>& from_scrambled_scramble,
+                         const Move& from_solved_last_move,
+                         const Move& from_scrambled_last_move);
+
+  /**
+   * Combines the two scrambles given to obtain a final solution
+   * @param from_solved_scramble     The set of moves needed to get to the
+   *                                 current state from the solved cube
+   * @param from_scrambled_scramble  The set of moves needed to get to the
+   *                                 current state from the scrambled cube
+   * @return                         The final solution computed by merging
+   *                                 the two scrambles
+   */
+  std::vector<Move> GetSolution(
+      std::vector<Move> from_solved_scramble,
+      const std::vector<Move>& from_scrambled_scramble) const;
+
   /**
    * Various methods used to determine if the given move is a move that
    * manipulates a certain face. For example, U, U', and U2 are all "Up" moves.
