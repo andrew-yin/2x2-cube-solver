@@ -57,20 +57,21 @@ class Solver {
    * The graph is implicitly generated starting from a solved Rubik's cube and
    * is searched for a solution via BFS.
    *
-   * The graph has two starting nodes - A solved state in the same orientation
-   * as the front-upper-left corner of the Rubik's cube. This reduces the search
-   * space immensely since we no longer need to consider the 24 "distinct"
-   * orientations of the same scramble.
+   * The graph has two starting nodes - The first node is a solved state in the
+   * same orientation as the front-upper-left corner of the Rubik's cube. This
+   * reduces the search space immensely since we no longer need to consider the
+   * 24 "distinct" orientations of the same scramble. The second node is the
+   * scrambled state given.
    *
-   * BFS then proceeds from this node. We are careful not to generate
-   * scrambles from unnecessary moves by ensuring the same face is not
-   * manipulated twice in a row. For example, doing an F move directly followed
-   * by an F2 is redundant, since we could have simply done a single F' move
-   * to achieve that state.
+   * BFS then proceeds from both of these two nodes simultaneously. We are
+   * careful not to generate scrambles from unnecessary moves by ensuring the
+   * same face is not manipulated twice in a row. For example, doing an F move
+   * directly followed by an F2 is redundant, since we could have simply done a
+   * single F' move to achieve that state.
    *
-   * BFS stops when the node traversed onto is the same as the scramble given.
-   * The solution then is returned by returning the reverse of the path needed
-   * to go from solved to that state.
+   * BFS stops when the two generated graphs intersect at a common state. The
+   * solution is then outputted by backtracking through both paths to get to
+   * this state.
    *
    * @param scrambled_cube  The scrambled cube to be solved.
    * @return                A vector of moves needed to solve the Rubik's cube.

@@ -53,7 +53,7 @@ list(APPEND CORE_SOURCE_FILES src/core/cube.cc src/core/solver.cc)
 
 list(APPEND SOURCE_FILES ${CORE_SOURCE_FILES} src/visualizer/cube_solver_app.cc src/visualizer/sticker.cc)
 
-list(APPEND TEST_FILES tests/test_main.cc tests/test_cube.cc)
+list(APPEND TEST_FILES tests/test_main.cc tests/test_cube.cc tests/test_solver.cc)
 
 add_executable(solver-main apps/solver_main.cc ${CORE_SOURCE_FILES})
 target_include_directories(solver-main PRIVATE include)

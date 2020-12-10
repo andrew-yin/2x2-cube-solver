@@ -1,5 +1,6 @@
 #include "core/solver.h"
 
+#include <iostream>
 #include <queue>
 #include <unordered_map>
 
@@ -66,6 +67,8 @@ std::vector<Move> Solver::SolveCube(Cube scrambled_cube) const {
   past_from_scrambled_states[scrambled_cube.GetID()] = std::vector<Move>();
 
   while (!from_solved_queue.empty() && !from_scrambled_queue.empty()) {
+    std::cout << from_solved_queue.size() << " " << from_scrambled_queue.size() << std::endl;
+
     std::pair<Cube, std::vector<Move>> from_solved_cube_scramble =
         from_solved_queue.front();
     from_solved_queue.pop();

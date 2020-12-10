@@ -7,38 +7,32 @@ using namespace cubesolver;
 int main() {
   Solver solver;
 
-  /* Scramble: R U2 L' B D */
+  /* U F' R' U R2 F' R2 F */
   std::array<std::array<Color, kNumCornersPerFace>, kNumFaces> stickers;
-
-  stickers[front][up_left] = yellow;
-  stickers[front][up_right] = blue;
-  stickers[front][low_left] = white;
-  stickers[front][low_right] = orange;
-
-  stickers[right][up_left] = orange;
-  stickers[right][up_right] = blue;
-  stickers[right][low_left] = yellow;
-  stickers[right][low_right] = yellow;
-
-  stickers[up][up_left] = orange;
-  stickers[up][up_right] = red;
-  stickers[up][low_left] = green;
-  stickers[up][low_right] = white;
-
-  stickers[left][up_left] = white;
-  stickers[left][up_right] = orange;
-  stickers[left][low_left] = green;
+  stickers[front][up_left] = blue;
+  stickers[front][up_right] = orange;
+  stickers[front][low_left] = red;
+  stickers[front][low_right] = red;
+  stickers[right][up_left] = yellow;
+  stickers[right][up_right] = green;
+  stickers[right][low_left] = blue;
+  stickers[right][low_right] = white;
+  stickers[up][up_left] = blue;
+  stickers[up][up_right] = white;
+  stickers[up][low_left] = orange;
+  stickers[up][low_right] = green;
+  stickers[left][up_left] = red;
+  stickers[left][up_right] = white;
+  stickers[left][low_left] = orange;
   stickers[left][low_right] = green;
-
-  stickers[back][up_left] = white;
-  stickers[back][up_right] = green;
-  stickers[back][low_left] = red;
-  stickers[back][low_right] = yellow;
-
-  stickers[down][up_left] = red;
-  stickers[down][up_right] = blue;
-  stickers[down][low_left] = red;
-  stickers[down][low_right] = blue;
+  stickers[back][up_left] = red;
+  stickers[back][up_right] = white;
+  stickers[back][low_left] = green;
+  stickers[back][low_right] = blue;
+  stickers[down][up_left] = yellow;
+  stickers[down][up_right] = yellow;
+  stickers[down][low_left] = yellow;
+  stickers[down][low_right] = orange;
 
   Cube scrambled(stickers);
   std::cout << "Searching..." << std::endl;
