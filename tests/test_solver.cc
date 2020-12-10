@@ -7,81 +7,81 @@ using namespace cubesolver;
 Solver solver;
 
 TEST_CASE("Pre-solved cube") {
-  Cube cube(green, white, orange);
+  Cube cube(kGreen, kWhite, kOrange);
 
   std::vector<Move> solution = solver.SolveCube(cube);
   REQUIRE(solution.empty());
 }
 
 TEST_CASE("Cube that is one move from being solved") {
-  Cube cube(green, white, orange);
+  Cube cube(kGreen, kWhite, kOrange);
   cube.MoveB();
 
   std::vector<Move> solution = solver.SolveCube(cube);
-  REQUIRE(solution == std::vector<Move>({Bp}));
+  REQUIRE(solution == std::vector<Move>({kBPrime}));
 }
 
 TEST_CASE("Random scramble") {
   /* U F' R' U R2 F' R2 F */
   std::array<std::array<Color, kNumCornersPerFace>, kNumFaces> stickers;
-  stickers[front][up_left] = blue;
-  stickers[front][up_right] = orange;
-  stickers[front][low_left] = red;
-  stickers[front][low_right] = red;
-  stickers[right][up_left] = yellow;
-  stickers[right][up_right] = green;
-  stickers[right][low_left] = blue;
-  stickers[right][low_right] = white;
-  stickers[up][up_left] = blue;
-  stickers[up][up_right] = white;
-  stickers[up][low_left] = orange;
-  stickers[up][low_right] = green;
-  stickers[left][up_left] = red;
-  stickers[left][up_right] = white;
-  stickers[left][low_left] = orange;
-  stickers[left][low_right] = green;
-  stickers[back][up_left] = red;
-  stickers[back][up_right] = white;
-  stickers[back][low_left] = green;
-  stickers[back][low_right] = blue;
-  stickers[down][up_left] = yellow;
-  stickers[down][up_right] = yellow;
-  stickers[down][low_left] = yellow;
-  stickers[down][low_right] = orange;
+  stickers[kFront][kUpperLeft] = kBlue;
+  stickers[kFront][kUpperRight] = kOrange;
+  stickers[kFront][kLowerLeft] = kRed;
+  stickers[kFront][kLowerRight] = kRed;
+  stickers[kRight][kUpperLeft] = kYellow;
+  stickers[kRight][kUpperRight] = kGreen;
+  stickers[kRight][kLowerLeft] = kBlue;
+  stickers[kRight][kLowerRight] = kWhite;
+  stickers[kUp][kUpperLeft] = kBlue;
+  stickers[kUp][kUpperRight] = kWhite;
+  stickers[kUp][kLowerLeft] = kOrange;
+  stickers[kUp][kLowerRight] = kGreen;
+  stickers[kLeft][kUpperLeft] = kRed;
+  stickers[kLeft][kUpperRight] = kWhite;
+  stickers[kLeft][kLowerLeft] = kOrange;
+  stickers[kLeft][kLowerRight] = kGreen;
+  stickers[kBack][kUpperLeft] = kRed;
+  stickers[kBack][kUpperRight] = kWhite;
+  stickers[kBack][kLowerLeft] = kGreen;
+  stickers[kBack][kLowerRight] = kBlue;
+  stickers[kDown][kUpperLeft] = kYellow;
+  stickers[kDown][kUpperRight] = kYellow;
+  stickers[kDown][kLowerLeft] = kYellow;
+  stickers[kDown][kLowerRight] = kOrange;
 
   Cube cube(stickers);
   std::vector<Move> solution = solver.SolveCube(cube);
-  REQUIRE(solution == std::vector<Move>({Bp, D2, B, R2, Dp, B, D, Rp}));
+  REQUIRE(solution == std::vector<Move>({kBPrime, kD2, kB, kR2, kDPrime, kB, kD, kRPrime}));
 }
 
 TEST_CASE("Invalid scramble") {
   /* Impossible corner color configurations */
   std::array<std::array<Color, kNumCornersPerFace>, kNumFaces> stickers;
-  stickers[front][up_left] = yellow;
-  stickers[front][up_right] = yellow;
-  stickers[front][low_left] = yellow;
-  stickers[front][low_right] = yellow;
-  stickers[right][up_left] = white;
-  stickers[right][up_right] = white;
-  stickers[right][low_left] = white;
-  stickers[right][low_right] = white;
-  stickers[up][up_left] = blue;
-  stickers[up][up_right] = blue;
-  stickers[up][low_left] = blue;
-  stickers[up][low_right] = blue;
-  stickers[left][up_left] = green;
-  stickers[left][up_right] = green;
-  stickers[left][low_left] = green;
-  stickers[left][low_right] = green;
-  stickers[back][up_right] = red;
-  stickers[back][low_left] = red;
-  stickers[back][low_right] = red;
-  stickers[down][up_left] = orange;
-  stickers[down][up_right] = orange;
-  stickers[down][low_left] = orange;
-  stickers[down][low_right] = orange;
+  stickers[kFront][kUpperLeft] = kYellow;
+  stickers[kFront][kUpperRight] = kYellow;
+  stickers[kFront][kLowerLeft] = kYellow;
+  stickers[kFront][kLowerRight] = kYellow;
+  stickers[kRight][kUpperLeft] = kWhite;
+  stickers[kRight][kUpperRight] = kWhite;
+  stickers[kRight][kLowerLeft] = kWhite;
+  stickers[kRight][kLowerRight] = kWhite;
+  stickers[kUp][kUpperLeft] = kBlue;
+  stickers[kUp][kUpperRight] = kBlue;
+  stickers[kUp][kLowerLeft] = kBlue;
+  stickers[kUp][kLowerRight] = kBlue;
+  stickers[kLeft][kUpperLeft] = kGreen;
+  stickers[kLeft][kUpperRight] = kGreen;
+  stickers[kLeft][kLowerLeft] = kGreen;
+  stickers[kLeft][kLowerRight] = kGreen;
+  stickers[kBack][kUpperRight] = kRed;
+  stickers[kBack][kLowerLeft] = kRed;
+  stickers[kBack][kLowerRight] = kRed;
+  stickers[kDown][kUpperLeft] = kOrange;
+  stickers[kDown][kUpperRight] = kOrange;
+  stickers[kDown][kLowerLeft] = kOrange;
+  stickers[kDown][kLowerRight] = kOrange;
 
   Cube cube(stickers);
   std::vector<Move> solution = solver.SolveCube(cube);
-  REQUIRE(solution == std::vector<Move>({no_move}));
+  REQUIRE(solution == std::vector<Move>({kNoMove}));
 }

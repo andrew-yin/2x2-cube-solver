@@ -10,7 +10,7 @@ typedef std::string ID;
 /**
  * Represents the six colors that exist on a cube
  */
-enum Color { white, yellow, red, orange, blue, green };
+enum Color { kWhite, kYellow, kRed, kOrange, kBlue, kGreen };
 
 /**
  * Returns a char representation of a Color enum
@@ -34,12 +34,12 @@ Color GetOppositeSide(const Color& color);
  * Represents the four locations of each sticker on each face when looking
  * directly at the face
  */
-enum Corner { up_left, up_right, low_left, low_right };
+enum Corner { kUpperLeft, kUpperRight, kLowerLeft, kLowerRight };
 
 /**
  * A Enum representation of the six faces of the Rubik's cube.
  */
-enum Face { front, back, left, right, up, down };
+enum Face { kFront, kBack, kLeft, kRight, kUp, kDown };
 
 /* The number of faces on a Rubik's cube */
 const size_t kNumFaces = 6;
@@ -85,7 +85,7 @@ struct Cube {
    * and corner is a Corner enum indicating the corner the sticker on the face
    * lies.
    *
-   * For example, stickers_[up][low_left] represents the sticker on the upper
+   * For example, stickers_[up][kLowerLeft] represents the sticker on the upper
    * face of the Rubik's cube and on the lower left corner of this face when
    * looked at directly.
    */

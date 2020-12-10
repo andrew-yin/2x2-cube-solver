@@ -4,35 +4,35 @@ namespace cubesolver {
 
 char ColorToChar(const Color& color) {
   switch (color) {
-    case white:
+    case kWhite:
       return 'w';
-    case yellow:
+    case kYellow:
       return 'y';
-    case red:
+    case kRed:
       return 'r';
-    case orange:
+    case kOrange:
       return 'o';
-    case blue:
+    case kBlue:
       return 'b';
-    case green:
+    case kGreen:
       return 'g';
   }
 }
 
 Color GetOppositeSide(const Color& color) {
   switch (color) {
-    case white:
-      return yellow;
-    case yellow:
-      return white;
-    case red:
-      return orange;
-    case orange:
-      return red;
-    case blue:
-      return green;
-    case green:
-      return blue;
+    case kWhite:
+      return kYellow;
+    case kYellow:
+      return kWhite;
+    case kRed:
+      return kOrange;
+    case kOrange:
+      return kRed;
+    case kBlue:
+      return kGreen;
+    case kGreen:
+      return kBlue;
   }
 }
 
@@ -46,104 +46,104 @@ Cube::Cube(const Color& f_color, const Color& u_color, const Color& l_color) {
   Color d_col = GetOppositeSide(u_color);
   Color r_col = GetOppositeSide(l_color);
   for (size_t i = 0; i < kNumCornersPerFace; i++) {
-    stickers_[up][i] = u_color;
-    stickers_[down][i] = d_col;
-    stickers_[left][i] = l_color;
-    stickers_[right][i] = r_col;
-    stickers_[front][i] = f_color;
-    stickers_[back][i] = b_col;
+    stickers_[kUp][i] = u_color;
+    stickers_[kDown][i] = d_col;
+    stickers_[kLeft][i] = l_color;
+    stickers_[kRight][i] = r_col;
+    stickers_[kFront][i] = f_color;
+    stickers_[kBack][i] = b_col;
   }
 }
 
 void Cube::MoveD() {
-  Color dur_org = stickers_[down][up_right];
-  Color dul_org = stickers_[down][up_left];
-  Color dlr_org = stickers_[down][low_right];
-  Color dll_org = stickers_[down][low_left];
+  Color dur_org = stickers_[kDown][kUpperRight];
+  Color dul_org = stickers_[kDown][kUpperLeft];
+  Color dlr_org = stickers_[kDown][kLowerRight];
+  Color dll_org = stickers_[kDown][kLowerLeft];
 
-  stickers_[down][up_right] = dul_org;
-  stickers_[down][up_left] = dll_org;
-  stickers_[down][low_left] = dlr_org;
-  stickers_[down][low_right] = dur_org;
+  stickers_[kDown][kUpperRight] = dul_org;
+  stickers_[kDown][kUpperLeft] = dll_org;
+  stickers_[kDown][kLowerLeft] = dlr_org;
+  stickers_[kDown][kLowerRight] = dur_org;
 
-  Color flr_org = stickers_[front][low_right];
-  Color fll_org = stickers_[front][low_left];
-  Color lll_org = stickers_[left][low_left];
-  Color llr_org = stickers_[left][low_right];
-  Color rll_org = stickers_[right][low_left];
-  Color rlr_org = stickers_[right][low_right];
-  Color blr_org = stickers_[back][low_right];
-  Color bll_org = stickers_[back][low_left];
+  Color flr_org = stickers_[kFront][kLowerRight];
+  Color fll_org = stickers_[kFront][kLowerLeft];
+  Color lll_org = stickers_[kLeft][kLowerLeft];
+  Color llr_org = stickers_[kLeft][kLowerRight];
+  Color rll_org = stickers_[kRight][kLowerLeft];
+  Color rlr_org = stickers_[kRight][kLowerRight];
+  Color blr_org = stickers_[kBack][kLowerRight];
+  Color bll_org = stickers_[kBack][kLowerLeft];
 
-  stickers_[front][low_left] = lll_org;
-  stickers_[front][low_right] = llr_org;
-  stickers_[left][low_right] = blr_org;
-  stickers_[left][low_left] = bll_org;
-  stickers_[right][low_left] = fll_org;
-  stickers_[right][low_right] = flr_org;
-  stickers_[back][low_left] = rll_org;
-  stickers_[back][low_right] = rlr_org;
+  stickers_[kFront][kLowerLeft] = lll_org;
+  stickers_[kFront][kLowerRight] = llr_org;
+  stickers_[kLeft][kLowerRight] = blr_org;
+  stickers_[kLeft][kLowerLeft] = bll_org;
+  stickers_[kRight][kLowerLeft] = fll_org;
+  stickers_[kRight][kLowerRight] = flr_org;
+  stickers_[kBack][kLowerLeft] = rll_org;
+  stickers_[kBack][kLowerRight] = rlr_org;
 }
 
 void Cube::MoveR() {
-  Color rur_org = stickers_[right][up_right];
-  Color rul_org = stickers_[right][up_left];
-  Color rlr_org = stickers_[right][low_right];
-  Color rll_org = stickers_[right][low_left];
+  Color rur_org = stickers_[kRight][kUpperRight];
+  Color rul_org = stickers_[kRight][kUpperLeft];
+  Color rlr_org = stickers_[kRight][kLowerRight];
+  Color rll_org = stickers_[kRight][kLowerLeft];
 
-  stickers_[right][up_right] = rul_org;
-  stickers_[right][up_left] = rll_org;
-  stickers_[right][low_left] = rlr_org;
-  stickers_[right][low_right] = rur_org;
+  stickers_[kRight][kUpperRight] = rul_org;
+  stickers_[kRight][kUpperLeft] = rll_org;
+  stickers_[kRight][kLowerLeft] = rlr_org;
+  stickers_[kRight][kLowerRight] = rur_org;
 
-  Color uur_org = stickers_[up][up_right];
-  Color ulr_org = stickers_[up][low_right];
-  Color fur_org = stickers_[front][up_right];
-  Color flr_org = stickers_[front][low_right];
-  Color bul_org = stickers_[back][up_left];
-  Color bll_org = stickers_[back][low_left];
-  Color dur_org = stickers_[down][up_right];
-  Color dlr_org = stickers_[down][low_right];
+  Color uur_org = stickers_[kUp][kUpperRight];
+  Color ulr_org = stickers_[kUp][kLowerRight];
+  Color fur_org = stickers_[kFront][kUpperRight];
+  Color flr_org = stickers_[kFront][kLowerRight];
+  Color bul_org = stickers_[kBack][kUpperLeft];
+  Color bll_org = stickers_[kBack][kLowerLeft];
+  Color dur_org = stickers_[kDown][kUpperRight];
+  Color dlr_org = stickers_[kDown][kLowerRight];
 
-  stickers_[front][up_right] = dur_org;
-  stickers_[front][low_right] = dlr_org;
-  stickers_[up][up_right] = fur_org;
-  stickers_[up][low_right] = flr_org;
-  stickers_[down][up_right] = bll_org;
-  stickers_[down][low_right] = bul_org;
-  stickers_[back][up_left] = ulr_org;
-  stickers_[back][low_left] = uur_org;
+  stickers_[kFront][kUpperRight] = dur_org;
+  stickers_[kFront][kLowerRight] = dlr_org;
+  stickers_[kUp][kUpperRight] = fur_org;
+  stickers_[kUp][kLowerRight] = flr_org;
+  stickers_[kDown][kUpperRight] = bll_org;
+  stickers_[kDown][kLowerRight] = bul_org;
+  stickers_[kBack][kUpperLeft] = ulr_org;
+  stickers_[kBack][kLowerLeft] = uur_org;
 }
 
 
 void Cube::MoveB() {
-  Color bur_org = stickers_[back][up_right];
-  Color bul_org = stickers_[back][up_left];
-  Color blr_org = stickers_[back][low_right];
-  Color bll_org = stickers_[back][low_left];
+  Color bur_org = stickers_[kBack][kUpperRight];
+  Color bul_org = stickers_[kBack][kUpperLeft];
+  Color blr_org = stickers_[kBack][kLowerRight];
+  Color bll_org = stickers_[kBack][kLowerLeft];
 
-  stickers_[back][up_right] = bul_org;
-  stickers_[back][up_left] = bll_org;
-  stickers_[back][low_left] = blr_org;
-  stickers_[back][low_right] = bur_org;
+  stickers_[kBack][kUpperRight] = bul_org;
+  stickers_[kBack][kUpperLeft] = bll_org;
+  stickers_[kBack][kLowerLeft] = blr_org;
+  stickers_[kBack][kLowerRight] = bur_org;
 
-  Color uur_org = stickers_[up][up_right];
-  Color uul_org = stickers_[up][up_left];
-  Color rur_org = stickers_[right][up_right];
-  Color rlr_org = stickers_[right][low_right];
-  Color lul_org = stickers_[left][up_left];
-  Color lll_org = stickers_[left][low_left];
-  Color dlr_org = stickers_[down][low_right];
-  Color dll_org = stickers_[down][low_left];
+  Color uur_org = stickers_[kUp][kUpperRight];
+  Color uul_org = stickers_[kUp][kUpperLeft];
+  Color rur_org = stickers_[kRight][kUpperRight];
+  Color rlr_org = stickers_[kRight][kLowerRight];
+  Color lul_org = stickers_[kLeft][kUpperLeft];
+  Color lll_org = stickers_[kLeft][kLowerLeft];
+  Color dlr_org = stickers_[kDown][kLowerRight];
+  Color dll_org = stickers_[kDown][kLowerLeft];
 
-  stickers_[up][up_left] = rur_org;
-  stickers_[up][up_right] = rlr_org;
-  stickers_[right][up_right] = dlr_org;
-  stickers_[right][low_right] = dll_org;
-  stickers_[left][up_left] = uur_org;
-  stickers_[left][low_left] = uul_org;
-  stickers_[down][low_left] = lul_org;
-  stickers_[down][low_right] = lll_org;
+  stickers_[kUp][kUpperLeft] = rur_org;
+  stickers_[kUp][kUpperRight] = rlr_org;
+  stickers_[kRight][kUpperRight] = dlr_org;
+  stickers_[kRight][kLowerRight] = dll_org;
+  stickers_[kLeft][kUpperLeft] = uur_org;
+  stickers_[kLeft][kLowerLeft] = uul_org;
+  stickers_[kDown][kLowerLeft] = lul_org;
+  stickers_[kDown][kLowerRight] = lll_org;
 }
 
 ID Cube::GetID() const {
@@ -157,30 +157,30 @@ ID Cube::GetID() const {
 }
 
 bool Cube::operator==(const Cube& b) const {
-  return (stickers_[front][up_left] == b.stickers_[front][up_left]) &&
-         (stickers_[front][up_right] == b.stickers_[front][up_right]) &&
-         (stickers_[front][low_left] == b.stickers_[front][low_left]) &&
-         (stickers_[front][low_right] == b.stickers_[front][low_right]) &&
-         (stickers_[left][up_left] == b.stickers_[left][up_left]) &&
-         (stickers_[left][up_right] == b.stickers_[left][up_right]) &&
-         (stickers_[left][low_left] == b.stickers_[left][low_left]) &&
-         (stickers_[left][low_right] == b.stickers_[left][low_right]) &&
-         (stickers_[up][up_left] == b.stickers_[up][up_left]) &&
-         (stickers_[up][up_right] == b.stickers_[up][up_right]) &&
-         (stickers_[up][low_left] == b.stickers_[up][low_left]) &&
-         (stickers_[up][low_right] == b.stickers_[up][low_right]) &&
-         (stickers_[right][up_left] == b.stickers_[right][up_left]) &&
-         (stickers_[right][up_right] == b.stickers_[right][up_right]) &&
-         (stickers_[right][low_left] == b.stickers_[right][low_left]) &&
-         (stickers_[right][low_right] == b.stickers_[right][low_right]) &&
-         (stickers_[down][up_left] == b.stickers_[down][up_left]) &&
-         (stickers_[down][up_right] == b.stickers_[down][up_right]) &&
-         (stickers_[down][low_left] == b.stickers_[down][low_left]) &&
-         (stickers_[down][low_right] == b.stickers_[down][low_right]) &&
-         (stickers_[back][up_left] == b.stickers_[back][up_left]) &&
-         (stickers_[back][up_right] == b.stickers_[back][up_right]) &&
-         (stickers_[back][low_left] == b.stickers_[back][low_left]) &&
-         (stickers_[back][low_right] == b.stickers_[back][low_right]);
+  return (stickers_[kFront][kUpperLeft] == b.stickers_[kFront][kUpperLeft]) &&
+         (stickers_[kFront][kUpperRight] == b.stickers_[kFront][kUpperRight]) &&
+         (stickers_[kFront][kLowerLeft] == b.stickers_[kFront][kLowerLeft]) &&
+         (stickers_[kFront][kLowerRight] == b.stickers_[kFront][kLowerRight]) &&
+         (stickers_[kLeft][kUpperLeft] == b.stickers_[kLeft][kUpperLeft]) &&
+         (stickers_[kLeft][kUpperRight] == b.stickers_[kLeft][kUpperRight]) &&
+         (stickers_[kLeft][kLowerLeft] == b.stickers_[kLeft][kLowerLeft]) &&
+         (stickers_[kLeft][kLowerRight] == b.stickers_[kLeft][kLowerRight]) &&
+         (stickers_[kUp][kUpperLeft] == b.stickers_[kUp][kUpperLeft]) &&
+         (stickers_[kUp][kUpperRight] == b.stickers_[kUp][kUpperRight]) &&
+         (stickers_[kUp][kLowerLeft] == b.stickers_[kUp][kLowerLeft]) &&
+         (stickers_[kUp][kLowerRight] == b.stickers_[kUp][kLowerRight]) &&
+         (stickers_[kRight][kUpperLeft] == b.stickers_[kRight][kUpperLeft]) &&
+         (stickers_[kRight][kUpperRight] == b.stickers_[kRight][kUpperRight]) &&
+         (stickers_[kRight][kLowerLeft] == b.stickers_[kRight][kLowerLeft]) &&
+         (stickers_[kRight][kLowerRight] == b.stickers_[kRight][kLowerRight]) &&
+         (stickers_[kDown][kUpperLeft] == b.stickers_[kDown][kUpperLeft]) &&
+         (stickers_[kDown][kUpperRight] == b.stickers_[kDown][kUpperRight]) &&
+         (stickers_[kDown][kLowerLeft] == b.stickers_[kDown][kLowerLeft]) &&
+         (stickers_[kDown][kLowerRight] == b.stickers_[kDown][kLowerRight]) &&
+         (stickers_[kBack][kUpperLeft] == b.stickers_[kBack][kUpperLeft]) &&
+         (stickers_[kBack][kUpperRight] == b.stickers_[kBack][kUpperRight]) &&
+         (stickers_[kBack][kLowerLeft] == b.stickers_[kBack][kLowerLeft]) &&
+         (stickers_[kBack][kLowerRight] == b.stickers_[kBack][kLowerRight]);
 }
 
 }  // namespace cubesolver

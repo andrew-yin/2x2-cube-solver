@@ -23,26 +23,26 @@ void CubeSolverApp::setup() {
   /* Initialize all 6 faces of the cube at their respective locations */
   glm::vec2 top_left_corner(2 * kStickerWidth,
                             kWindowHeight / 2 - kStickerWidth);
-  CreateFace(left, top_left_corner);
+  CreateFace(kLeft, top_left_corner);
 
   top_left_corner += glm::vec2(2 * kStickerWidth, 0);
-  CreateFace(front, top_left_corner);
+  CreateFace(kFront, top_left_corner);
 
   top_left_corner += glm::vec2(0, -2 * kStickerWidth);
-  CreateFace(up, top_left_corner);
+  CreateFace(kUp, top_left_corner);
 
   top_left_corner += glm::vec2(0, 4 * kStickerWidth);
-  CreateFace(down, top_left_corner);
+  CreateFace(kDown, top_left_corner);
 
   top_left_corner += glm::vec2(2 * kStickerWidth, -2 * kStickerWidth);
-  CreateFace(right, top_left_corner);
+  CreateFace(kRight, top_left_corner);
 
   top_left_corner += glm::vec2(2 * kStickerWidth, 0);
-  CreateFace(back, top_left_corner);
+  CreateFace(kBack, top_left_corner);
 }
 
 void CubeSolverApp::draw() {
-  ci::Color8u background_color(255, 246, 148);  // light yellow
+  ci::Color8u background_color(255, 246, 148);  // light kYellow
   ci::gl::clear(background_color);
 
   glm::vec2 instructions_pos(kWindowWidth / 2 - 2 * kStickerWidth,
@@ -126,30 +126,30 @@ void CubeSolverApp::mouseDown(ci::app::MouseEvent event) {
           Color color;
           switch (current_state_) {
             case select_red:
-              color = red;
+              color = kRed;
               break;
             case select_orange:
-              color = orange;
+              color = kOrange;
               break;
             case select_blue:
-              color = blue;
+              color = kBlue;
               break;
             case select_green:
-              color = green;
+              color = kGreen;
               break;
             case select_yellow:
-              color = yellow;
+              color = kYellow;
               break;
             default:
               break;
           }
 
           Color sticker_color = sticker.GetColor();
-          if (sticker_color == white) {
+          if (sticker_color == kWhite) {
             sticker.SetColor(color);
             color_count_++;
           } else if (sticker_color == color) {
-            sticker.SetColor(white);
+            sticker.SetColor(kWhite);
             color_count_--;
           }
 
@@ -179,19 +179,19 @@ void CubeSolverApp::keyDown(ci::app::KeyEvent event) {
 
 void CubeSolverApp::CreateFace(const Face& face,
                                const glm::vec2& top_left_corner) {
-  stickers_[face][up_left] = Sticker(top_left_corner, kStickerWidth);
-  stickers_[face][low_left] =
+  stickers_[face][kUpperLeft] = Sticker(top_left_corner, kStickerWidth);
+  stickers_[face][kLowerLeft] =
       Sticker(top_left_corner + glm::vec2(0, kStickerWidth), kStickerWidth);
-  stickers_[face][low_right] = Sticker(
+  stickers_[face][kLowerRight] = Sticker(
       top_left_corner + glm::vec2(kStickerWidth, kStickerWidth), kStickerWidth);
-  stickers_[face][up_right] =
+  stickers_[face][kUpperRight] =
       Sticker(top_left_corner + glm::vec2(kStickerWidth, 0), kStickerWidth);
 }
 
 void CubeSolverApp::Clear() {
   for (size_t i = 0; i < kNumFaces; i++) {
     for (size_t j = 0; j < kNumCornersPerFace; j++) {
-      stickers_[i][j].SetColor(white);
+      stickers_[i][j].SetColor(kWhite);
     }
   }
   current_state_ = select_red;

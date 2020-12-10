@@ -14,25 +14,25 @@ namespace cubesolver {
  * More info can be found here: https://ruwix.com/the-rubiks-cube/notation/
  */
 enum Move {
-  F,
-  Fp,
-  F2,
-  B,
-  Bp,
-  B2,
-  U,
-  Up,
-  U2,
-  D,
-  Dp,
-  D2,
-  R,
-  Rp,
-  R2,
-  L,
-  Lp,
-  L2,
-  no_move
+  kF,
+  kFPrime,
+  kF2,
+  kB,
+  kBPrime,
+  kB2,
+  kU,
+  kUPrime,
+  kU2,
+  kD,
+  kDPrime,
+  kD2,
+  kR,
+  kRPrime,
+  kR2,
+  kL,
+  kLPrime,
+  kL2,
+  kNoMove
 };
 
 /**

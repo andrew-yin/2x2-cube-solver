@@ -8,27 +8,27 @@ namespace visualizer {
 
 Sticker::Sticker(const glm::vec2& top_left_corner, const double& width)
     : box_(top_left_corner, top_left_corner + glm::vec2(width, width)),
-      color_(white) {
+      color_(kWhite) {
 }
 
 void Sticker::Draw() const {
   switch (color_) {
-    case yellow:
+    case kYellow:
       ci::gl::color(ci::Color("yellow"));
       break;
-    case red:
+    case kRed:
       ci::gl::color(ci::Color("red"));
       break;
-    case orange:
+    case kOrange:
       ci::gl::color(ci::Color("orange"));
       break;
-    case blue:
+    case kBlue:
       ci::gl::color(ci::Color("blue"));
       break;
-    case green:
+    case kGreen:
       ci::gl::color(ci::Color("green"));
       break;
-    case white:
+    case kWhite:
       ci::gl::color(ci::Color("white"));
       break;
   }
