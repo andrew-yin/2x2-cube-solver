@@ -70,20 +70,16 @@ void CubeSolverApp::draw() {
     case all_selected:
       instructions_msg = "Press Enter to start solving.";
       break;
-    case solving:
-      instructions_msg = "Please wait for a solution on the right.";
-      break;
     case solved:
-      instructions_msg = "Please view the solution on the right.";
+      instructions_msg =
+          "Please view the solution on the right (if one exists).";
       break;
   }
 
   /* Generate a message for where the solution is to be placed based on the
    * app state */
   std::string solution_msg;
-  if (current_state_ == solving) {
-    solution_msg = "Solving...";
-  } else if (current_state_ == solved) {
+  if (current_state_ == solved) {
     std::string separator = "";
     for (const Move& move : solution_) {
       solution_msg += separator + MoveToString(move);
@@ -121,8 +117,7 @@ void CubeSolverApp::draw() {
 }
 
 void CubeSolverApp::mouseDown(ci::app::MouseEvent event) {
-  if (current_state_ != solved && current_state_ != solving &&
-      current_state_ != all_selected) {
+  if (current_state_ != solved && current_state_ != all_selected) {
     glm::vec2 mouse_pos = event.getPos();
     for (size_t i = 0; i < kNumFaces; i++) {
       for (size_t j = 0; j < kNumCornersPerFace; j++) {
@@ -144,6 +139,8 @@ void CubeSolverApp::mouseDown(ci::app::MouseEvent event) {
               break;
             case select_yellow:
               color = yellow;
+              break;
+            default:
               break;
           }
 
@@ -170,7 +167,6 @@ void CubeSolverApp::keyDown(ci::app::KeyEvent event) {
   switch (event.getCode()) {
     case ci::app::KeyEvent::KEY_RETURN:
       if (current_state_ == all_selected) {
-        ++current_state_;
         Solve();
         ++current_state_;
       }

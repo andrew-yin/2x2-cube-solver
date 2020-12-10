@@ -19,6 +19,23 @@ char ColorToChar(const Color& color) {
   }
 }
 
+Color GetOppositeSide(const Color& color) {
+  switch (color) {
+    case white:
+      return yellow;
+    case yellow:
+      return white;
+    case red:
+      return orange;
+    case orange:
+      return red;
+    case blue:
+      return green;
+    case green:
+      return blue;
+  }
+}
+
 Cube::Cube(const std::array<std::array<Color, kNumCornersPerFace>, kNumFaces>&
                stickers)
     : stickers_(stickers) {
@@ -127,23 +144,6 @@ void Cube::MoveB() {
   stickers_[left][low_left] = uul_org;
   stickers_[down][low_left] = lul_org;
   stickers_[down][low_right] = lll_org;
-}
-
-Color Cube::GetOppositeSide(const Color& color) const {
-  switch (color) {
-    case white:
-      return yellow;
-    case yellow:
-      return white;
-    case red:
-      return orange;
-    case orange:
-      return red;
-    case blue:
-      return green;
-    case green:
-      return blue;
-  }
 }
 
 ID Cube::GetID() const {

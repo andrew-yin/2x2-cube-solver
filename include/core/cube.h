@@ -21,6 +21,16 @@ enum Color { white, yellow, red, orange, blue, green };
 char ColorToChar(const Color& color);
 
 /**
+ * Returns the color of the opposite side of the cube when the cube is in a
+ * solved state.
+ *
+ * @param color  The color specified
+ * @return       The color that lies on the opposite face of the color
+ *               specified in the cube's solved state.
+ */
+Color GetOppositeSide(const Color& color);
+
+/**
  * Represents the four locations of each sticker on each face when looking
  * directly at the face
  */
@@ -80,16 +90,6 @@ struct Cube {
    * looked at directly.
    */
   std::array<std::array<Color, kNumCornersPerFace>, kNumFaces> stickers_;
-
-  /**
-   * Returns the color of the opposite side of the cube when the cube is in a
-   * solved state.
-   *
-   * @param color  The color specified
-   * @return       The color that lies on the opposite face of the color
-   *               specified in the cube's solved state.
-   */
-  Color GetOppositeSide(const Color& color) const;
 
   /**
    * Generates a unique ID corresponding to the current state of the Rubik's

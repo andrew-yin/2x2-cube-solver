@@ -54,8 +54,7 @@ class Solver {
    *
    * Algorithm overview:
    *
-   * The graph is implicitly generated starting from a solved Rubik's cube and
-   * is searched for a solution via BFS.
+   * The graph is implicitly generated and is searched for a solution via BFS.
    *
    * The graph has two starting nodes - The first node is a solved state in the
    * same orientation as the front-upper-left corner of the Rubik's cube. This
@@ -91,6 +90,23 @@ class Solver {
   bool IsBackMove(const Move& move) const;
   bool IsRightMove(const Move& move) const;
   bool IsDownMove(const Move& move) const;
+
+  /**
+   * Checks if the cube given is actually a valid type of cube
+   *
+   * @param cube  The cube to be checked for validity
+   * @return      True if the cube is a valid scramble, false otherwise
+   */
+  bool IsValidCube(const Cube& cube) const;
+
+  /**
+   * Checks if the corner given is a valid corner of the cube
+   *
+   * @param color1/2/3  The three colors of the corner
+   * @return            True if the corner is valid, false otherwise
+   */
+  bool IsValidCorner(const Color& color1, const Color& color2,
+                     const Color& color3) const;
 };
 
 }  // namespace cubesolver

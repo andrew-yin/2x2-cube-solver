@@ -26,8 +26,6 @@ enum AppState {
   select_yellow,
   /* User has selected all stickers */
   all_selected,
-  /* Application is currently computing a solution to the cube */
-  solving,
   /* Application has output a solution */
   solved
 };
