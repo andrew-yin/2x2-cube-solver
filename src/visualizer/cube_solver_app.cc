@@ -186,10 +186,15 @@ std::string CubeSolverApp::GetInstructionsMessage() const {
 std::string CubeSolverApp::GetSolutionMessage() const {
   std::string solution_msg;
   if (current_state_ == solved) {
-    std::string separator = "";
-    for (const Move& move : solution_) {
-      solution_msg += separator + MoveToString(move);
-      separator = " ";
+    if (solution_.empty()) {
+      solution_msg = "Your cube is already solved!";
+    }
+    else {
+      std::string separator = "";
+      for (const Move& move : solution_) {
+        solution_msg += separator + MoveToString(move);
+        separator = " ";
+      }
     }
   } else {
     solution_msg = "N/A";
